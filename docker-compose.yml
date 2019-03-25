@@ -1,0 +1,38 @@
+version: "3"
+
+networks:
+  postgresnet-sacsis:
+
+services:
+  postgresql-sacsis:  
+    restart: on-failure
+    image: postgres:9.6 
+    hostname: postgresql-sacsis
+    container_name: postgresql-sacsis
+    environment:                                                            
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=sacsisdb  
+    networks:
+      - postgresnet-sacsis
+    volumes:
+      - postgres-sacsis-data:/var/lib/postgresql/data
+
+  flask-sacsis:
+    restart: on-failure
+    build: .
+    container_name: flask-sacsis
+    environment:
+      - JWT_KEY=The quick brown fox jumps over the lazy dog
+      - DATABASE_URL=postgresql://admin:admin@postgresql-sacsis/sacsisdb
+    volumes: 
+      - .:/aplication
+    depends_on:
+      - postgresql-sacsis
+    ports:
+      - "5000:5000"
+    networks:                                                               
+      - postgresnet-sacsis
+
+volumes:
+  postgres-sacsis-data:
