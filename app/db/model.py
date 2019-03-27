@@ -12,7 +12,8 @@ class UserModel(db.Model):
     cpf = db.Column(db.String(11), nullable=False)
     rg = db.Column(db.String(15), nullable=False)
     senha = db.Column(db.String, nullable=False)
-    paid_out = db.Column(db.Boolean, default=False)
+    
+    status_pago = db.Column(db.Boolean, default=False)
 
     admin = db.relationship('AdminModel', backref='user')
 
