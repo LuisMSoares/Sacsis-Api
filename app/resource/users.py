@@ -4,13 +4,14 @@ from app.resource import message
 
 
 class UserResource(Resource):
-    def post():
+    def post(self):
         user = UserModel(nome=request.json['nome'],
                          email=request.json['email'],
                          matricula=request.json['matricula'],
                          cpf=request.json['cpf'],
-                         rg=request.json['rg'],
-                         senha=hash_password(request.json['senha']))
+                         rg=request.json['rg']
+        )
+        user.hash_password(request.json['senha'])
         try:
             db.session.add(user)
             db.session.commit()
@@ -20,5 +21,3 @@ class UserResource(Resource):
         else:
             return marshal({'message':'Usuário cadastrado'}, message), 200
 
-    def put(user_id=None):
-        user = UserModel.query.filter_by()

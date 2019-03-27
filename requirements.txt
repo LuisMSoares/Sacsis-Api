@@ -5,3 +5,4 @@ flask-jwt-extended
 psycopg2
 psycopg2-binary
 passlib
+gunicorn

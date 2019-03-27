@@ -16,21 +16,22 @@ class UserModel(db.Model):
     status_pago = db.Column(db.Boolean, default=False)
 
     admin = db.relationship('AdminModel', backref='user')
+    
 
-    def hash_password(self, password):
-        self.password = pwd_context.encrypt(password)
+    def hash_password(self, senha):
+        self.senha = pwd_context.encrypt(senha)
 
 
-    def verify_password(self, password):
+    def verify_password(self, senha):
         # return True or False
-        return pwd_context.verify(password, self.password)
+        return pwd_context.verify(senha, self.senha)
 
 
 class AdminModel(db.Model):
     __tablename__ = 'administradores'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('UserModel.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     activate = db.Column(db.Boolean, default=False)
 
 
@@ -41,15 +42,15 @@ class CoursesModel(db.Model):
     title = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String, nullable=False)
     slots = db.Column(db.Integer, default=0)
-    start_datetime = db.Column(db.Datetime, nullable=False)
-    finish_datetime = db.Column(db.Datetime, nullable=False)
+    start_datetime = db.Column(db.DateTime, nullable=False)
+    finish_datetime = db.Column(db.DateTime, nullable=False)
 
 
 class ShirtModel(db.Model):
     __tablename__ = 'camisetas'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('UserModel.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     size = db.Column(db.String(20), nullable=False)
 
 
