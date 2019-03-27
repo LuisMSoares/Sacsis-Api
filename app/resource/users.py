@@ -16,5 +16,9 @@ class UserResource(Resource):
             db.session.commit()
         except:
             db.session.rollback()
-            return marshal({'message':'úsuario cadastrado'}, message)
-        
+            return marshal({'message':'Endereço de email já cadastrado'}, message), 422
+        else:
+            return marshal({'message':'Usuário cadastrado'}, message), 200
+
+    def put(user_id=None):
+        user = UserModel.query.filter_by()

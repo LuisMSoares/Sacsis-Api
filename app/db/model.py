@@ -7,7 +7,7 @@ class UserModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
     matricula = db.Column(db.String(10), nullable=False)
     cpf = db.Column(db.String(11), nullable=False)
     rg = db.Column(db.String(15), nullable=False)
