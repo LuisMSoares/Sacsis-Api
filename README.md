@@ -67,4 +67,7 @@ Login efetuado com sucesso `200`
     }
  
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop

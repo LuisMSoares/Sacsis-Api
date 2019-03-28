@@ -23,6 +23,8 @@ services:
     build: .
     container_name: flask-sacsis
     environment:
+      - MASTER_ADM_LOGIN=administrador
+      - MASTER_ADM_PASSWORD=administrador
       - JWT_KEY=The quick brown fox jumps over the lazy dog
       - DATABASE_URL=postgresql://admin:admin@postgresql-sacsis/sacsisdb
     volumes: 
