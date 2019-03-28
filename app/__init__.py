@@ -36,8 +36,8 @@ with app.app_context():
     # remove this in production
     #db.drop_all()
     #print(' * Drop all tables!')
-    #db.create_all()
-    
+
+    db.create_all()
     #Master Administrator Registration
     user = UserModel.query.filter_by(nome='Administrador Mestre').first()
     if not user:
