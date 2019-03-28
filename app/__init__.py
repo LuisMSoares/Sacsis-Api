@@ -25,17 +25,18 @@ def not_found(error):
 api = Api(app)
 api.prefix = '/api'
 
-from app.resource import UserResource, LoginResource
+from app.resource import UserResource, LoginResource, UserAdminResource
 
-api.add_resource(UserResource, '/user')
+api.add_resource(UserResource, '/user', '/user/<int:user_id>')
+api.add_resource(UserAdminResource, '/user/all')
 api.add_resource(LoginResource, '/login')
 
 
 with app.app_context():
     # remove this in production
-    db.drop_all()
-    print(' * Drop all tables!')
-    db.create_all()
+    #db.drop_all()
+    #print(' * Drop all tables!')
+    #db.create_all()
     
     #Master Administrator Registration
     user = UserModel.query.filter_by(nome='Administrador Mestre').first()

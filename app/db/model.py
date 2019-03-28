@@ -1,7 +1,7 @@
 from app.db import db
 from passlib.apps import custom_app_context as pwd_context
 
-
+#admin=
 class UserModel(db.Model):
     __tablename__ = 'usuarios'
 
@@ -12,10 +12,9 @@ class UserModel(db.Model):
     cpf = db.Column(db.String(11), nullable=False)
     rg = db.Column(db.String(15), nullable=False)
     senha = db.Column(db.String, nullable=False)
-    
-    status_pago = db.Column(db.Boolean, default=False)
 
-    admin = db.relationship('AdminModel', backref='user')
+    status_pago = db.Column(db.Boolean, default=False)
+    admin = db.Column(db.Boolean, default=False)
     
 
     def hash_password(self, senha):
@@ -27,23 +26,18 @@ class UserModel(db.Model):
         return pwd_context.verify(senha, self.senha)
 
 
-class AdminModel(db.Model):
-    __tablename__ = 'administradores'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    activate = db.Column(db.Boolean, default=False)
-
-
 class CoursesModel(db.Model):
     __tablename__ = 'minicursos'
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String, nullable=False)
-    slots = db.Column(db.Integer, default=0)
+    titulo = db.Column(db.String(50), nullable=False)
+    descricao = db.Column(db.String, nullable=False)
     start_datetime = db.Column(db.DateTime, nullable=False)
     finish_datetime = db.Column(db.DateTime, nullable=False)
+    vagas = db.Column(db.Integer, default=0)
+
+    ministrante_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    ministrante = db.relationship('UserModel', backref='ministrante')
 
 
 class ShirtModel(db.Model):
