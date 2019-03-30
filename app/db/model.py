@@ -1,7 +1,8 @@
 from app.db import db
 from passlib.apps import custom_app_context as pwd_context
+from datetime import datetime
 
-#admin=
+
 class UserModel(db.Model):
     __tablename__ = 'usuarios'
 
@@ -15,11 +16,10 @@ class UserModel(db.Model):
 
     status_pago = db.Column(db.Boolean, default=False)
     admin = db.Column(db.Boolean, default=False)
-    
+
 
     def hash_password(self, senha):
         self.senha = pwd_context.encrypt(senha)
-
 
     def verify_password(self, senha):
         # return True or False
@@ -32,12 +32,17 @@ class CoursesModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(50), nullable=False)
     descricao = db.Column(db.String, nullable=False)
-    start_datetime = db.Column(db.DateTime, nullable=False)
-    finish_datetime = db.Column(db.DateTime, nullable=False)
+    data_inicio = db.Column(db.DateTime)#, nullable=False)
+    data_fim = db.Column(db.DateTime)#, nullable=False)
     vagas = db.Column(db.Integer, default=0)
 
     ministrante_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     ministrante = db.relationship('UserModel', backref='ministrante')
+
+    #date format '2019-03-29 15:50'
+    def inserir_datas(self, data_inicio, data_fim):
+        self.data_inicio = datetime.strptime(str(data_inicio),"%Y-%m-%d %H:%M:%S")
+        self.data_fim = datetime.strptime(str(data_fim),"%Y-%m-%d %H:%M:%S")
 
 
 class ShirtModel(db.Model):
