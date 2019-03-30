@@ -1,3 +1,4 @@
+from flask import jsonify
 from flask_jwt_extended import create_access_token
 from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel
@@ -22,4 +23,10 @@ class LoginResource(Resource):
         if not user.verify_password(request.json['senha']):
             return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
-        return {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}, 200
+        if user.admin:
+            retunr jsonify(
+                jwt_token=jwt_token, admin=True, dados=marshal(user, user_field)
+            ), 200
+        retunr jsonify(
+            jwt_token=jwt_token, dados=marshal(user, user_field)
+        ), 200
