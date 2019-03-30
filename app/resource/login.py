@@ -1,4 +1,3 @@
-from flask import jsonify
 from flask_jwt_extended import create_access_token
 from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel
@@ -24,9 +23,5 @@ class LoginResource(Resource):
             return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
         if user.admin:
-            return jsonify(
-                jwt_token=jwt_token, admin=True, dados=marshal(user, user_field)
-            ), 200
-        return jsonify(
-            jwt_token=jwt_token, dados=marshal(user, user_field)
-        ), 200
+            return {'jwt_token':jwt_token,'admin': True, 'dados': marshal(user, user_field)}, 200
+        return {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}, 200
