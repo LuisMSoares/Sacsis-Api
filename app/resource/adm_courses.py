@@ -1,6 +1,7 @@
+from flask_jwt_extended import ( jwt_required, get_jwt_identity )
 from flask_restful import Resource, request, fields, marshal
 from app.db import db, CoursesModel
-from app.resource import message
+from app.resource import message, admin_required
 
 course_field = {
     'id': fields.Integer,
@@ -14,6 +15,7 @@ course_field = {
 
 
 class CoursesResource(Resource):
+    @admin_required
     def post(self):
         course = CoursesModel(
             titulo=request.json['titulo'],
@@ -32,6 +34,7 @@ class CoursesResource(Resource):
             return marshal({'message':'Minicurso cadastrado'}, message), 201
 
 
+    @admin_required
     def put(self):
         course = CoursesModel.query.filter_by(id=request.json['id']).first()
         if not course:
@@ -57,6 +60,7 @@ class CoursesResource(Resource):
             return marshal(course, course_field)
 
 
+    @admin_required
     def get(self, course_id=None):
         if course_id:
             course = CoursesModel.query.filter_by(id=course_id).first()
@@ -71,6 +75,7 @@ class CoursesResource(Resource):
             return {'quantidade': len(format_courses),'minicursos': format_courses}, 200
 
 
+    @admin_required
     def delete(self, course_id=None):
         if not course_id:
             return marshal({'message':'Informe o id do minicurso'}, message), 404

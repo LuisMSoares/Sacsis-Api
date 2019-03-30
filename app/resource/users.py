@@ -1,3 +1,4 @@
+from flask_jwt_extended import ( jwt_required, get_jwt_identity )
 from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel
 from app.resource import message
@@ -33,8 +34,9 @@ class UserResource(Resource):
             return marshal({'message':'Usuário cadastrado'}, message), 201
 
 
+    @jwt_required
     def put(self):
-        user = UserModel.query.filter_by(id=request.json['id']).first()
+        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
         if not user:
             return marshal({'message':'Usuário inexistente'}, message), 404
         if 'nome' in request.json:
@@ -54,8 +56,9 @@ class UserResource(Resource):
             return marshal(user, user_field)
 
 
-    def get(self, user_id):
-        user = UserModel.query.filter_by(id=user_id).first()
+    @jwt_required
+    def get(self):
+        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
         if not user:
             return marshal({'message':'Usuário não encontrado'}, message), 404
         return marshal(user, user_field)
