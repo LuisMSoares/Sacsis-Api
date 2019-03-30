@@ -24,9 +24,9 @@ class LoginResource(Resource):
             return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
         if user.admin:
-            retunr jsonify(
+            return jsonify(
                 jwt_token=jwt_token, admin=True, dados=marshal(user, user_field)
             ), 200
-        retunr jsonify(
+        return jsonify(
             jwt_token=jwt_token, dados=marshal(user, user_field)
         ), 200
