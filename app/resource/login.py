@@ -3,9 +3,16 @@ from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel
 from app.resource import message
 
-token = {
-    'jwt_token':fields.String
+user_field = {
+    'id': fields.Integer,
+    'nome': fields.String,
+    'email': fields.String,
+    'matricula': fields.String,
+    'cpf': fields.String,
+    'rg': fields.String,
+    'status_pago': fields.Boolean
 }
+
 
 class LoginResource(Resource):
     def post(self):
@@ -15,4 +22,4 @@ class LoginResource(Resource):
         if not user.verify_password(request.json['senha']):
             return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
-        return marshal({'jwt_token':jwt_token}, token), 200
+        return {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}, 200
