@@ -25,10 +25,12 @@ def not_found(error):
 api = Api(app)
 api.prefix = '/api'
 
-from app.resource import UserResource, LoginResource, UserAdminResource
+from app.resource import UserResource, LoginResource, UserAdminResource, CoursesResource
+
+api.add_resource(CoursesResource, '/admin/course', '/admin/course/<int:course_id>')
+api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
 
 api.add_resource(UserResource, '/user', '/user/<int:user_id>')
-api.add_resource(UserAdminResource, '/user/all')
 api.add_resource(LoginResource, '/login')
 
 
@@ -44,10 +46,12 @@ with app.app_context():
     #Master Administrator Registration
     user = UserModel.query.filter_by(nome='Administrador Mestre').first()
     if not user:
-        user = UserModel(nome='Administrador Mestre',
-                            matricula='0000',
-                            cpf='00000000000',
-                            rg='00000000000'
+        user = UserModel(
+            nome='Administrador Mestre',
+            matricula='0000',
+            cpf='00000000000',
+            rg='00000000000',
+            admin=True
         )
     user.email=environ.get('MASTER_ADM_LOGIN','admin')
     user.hash_password(environ.get('MASTER_ADM_PASSWORD','admin'))

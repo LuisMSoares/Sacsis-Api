@@ -28,7 +28,7 @@ Endereço de email duplicado `422`
        'message':'Endereço de email já cadastrado'
     }
     
-Cadastrado com sucesso `200`
+Cadastrado com sucesso `201`
 
     {
        'message':'Usuário cadastrado'
