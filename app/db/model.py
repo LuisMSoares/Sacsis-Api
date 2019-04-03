@@ -16,17 +16,12 @@ class UserModel(db.Model):
     rg = db.Column(db.String(15), nullable=False)
     camiseta = db.Column(db.String(25), nullable=False)
     senha = db.Column(db.String, nullable=False)
-    senha_reset = db.Column(db.String)
 
     ativo = db.Column(db.Boolean, default=False)
     status_pago = db.Column(db.Boolean, default=False)
     admin = db.Column(db.Boolean, default=False)
+    senha_temporaria = relationship('ResetPasswordModel', uselist=False)
 
-
-    def hash_reset_password(self):
-        temp_pass = pwd.genword(entropy=86)
-        self.senha_reset = pwd_context.encrypt(temp_pass)
-        return temp_pass
 
     def hash_password(self, senha):
         self.senha = pwd_context.encrypt(senha)
@@ -40,7 +35,7 @@ class ResetPasswordModel(db.Model):
     __tablename__ = 'senha_opcional'
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    usuario_id = db.Column(db.Integer, unique=True, db.ForeignKey('usuarios.id'))
     senha = db.Column(db.String, nullable=False)
 
 
