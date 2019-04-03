@@ -20,7 +20,7 @@ class UserModel(db.Model):
     ativo = db.Column(db.Boolean, default=False)
     status_pago = db.Column(db.Boolean, default=False)
     admin = db.Column(db.Boolean, default=False)
-    senha_temporaria = relationship('ResetPasswordModel', uselist=False)
+    senha_temporaria = db.relationship('ResetPasswordModel', uselist=False)
 
 
     def hash_password(self, senha):
@@ -35,13 +35,13 @@ class ResetPasswordModel(db.Model):
     __tablename__ = 'senha_opcional'
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, unique=True, db.ForeignKey('usuarios.id'))
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), unique=True)
     senha = db.Column(db.String, nullable=False)
 
 
     def generate_password(self):
         temp_pass = pwd.genword(entropy=86)
-        self.senha_reset = pwd_context.encrypt(temp_pass)
+        self.senha = pwd_context.encrypt(temp_pass)
         return temp_pass
 
     def verify_password(self, senha):

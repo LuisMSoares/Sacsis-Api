@@ -17,15 +17,25 @@ user_field = {
 
 class LoginResource(Resource):
     def post(self):
+        reset_user = False
         user = UserModel.query.filter_by(email=request.json['login']).first()
         if not user:
             return marshal({'message':'Login para o usuario não encontrado'}, message), 401
         if not user.verify_password(request.json['senha']):
-            return marshal({'message':'Senha informada incorreta'}, message), 401
+            reset_user = user.senha_temporaria
+            if reset_user:
+                if reset_user.verify_password(request.json['senha']):
+                    reset_user = True
+                else:
+                    reset_user = False
+            else:
+                return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
         data = {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}
         if not user.ativo:
             data['ativo'] = False
         if user.admin:
             data['admin'] = True
+        if reset_user:
+            data['rsenha'] = True
         return data, 200

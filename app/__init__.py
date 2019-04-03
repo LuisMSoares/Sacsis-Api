@@ -45,13 +45,15 @@ def not_found(error):
 
 
 # Resources app registration
-from app.resource import UserResource, LoginResource, UserAdminResource, CoursesResource
+from app.resource import (UserResource, LoginResource, 
+UserAdminResource, CoursesResource, ResetPasswordResource)
 
 api.add_resource(CoursesResource, '/admin/course', '/admin/course/<int:course_id>')
 api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(LoginResource, '/login')
+api.add_resource(ResetPasswordResource, '/reset_password')
 
 
 

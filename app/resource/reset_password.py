@@ -1,4 +1,4 @@
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import ( create_access_token, jwt_required, get_jwt_identity )
 from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel, ResetPasswordModel
 from app.services import SendEmail
@@ -12,7 +12,7 @@ class ResetPasswordResource(Resource):
             return marshal({'message':'Login para o usuario não encontrado'}, message), 401
         reset_user = ResetPasswordModel.query.filter_by(usuario_id=user.id).first()
         try:
-            if not user_user:
+            if reset_user:
                 tpass = reset_user.generate_password()
             else:
                 reset_user = ResetPasswordModel(usuario_id=user.id)
@@ -23,12 +23,14 @@ class ResetPasswordResource(Resource):
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
         SendEmail.reset_password('SACSIS XI - Redefinição de senha', user.email, tpass)
-        return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
+        #return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
+        return marshal({'message':tpass}, message), 200
 
     @jwt_required
     def put(self):
-        reset_user = ResetPasswordModel.query.filter_by(usuario_id=user.id).first()
-        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
+        user_id = get_jwt_identity()
+        reset_user = ResetPasswordModel.query.filter_by(usuario_id=user_id).first()
+        user = UserModel.query.filter_by(id=user_id).first()
         user.hash_password(request.json['senha'])
         try:
             db.session.delete(reset_user)

@@ -42,3 +42,4 @@ from app.resource.users import UserResource
 from app.resource.login import LoginResource
 from app.resource.adm_courses import CoursesResource
 from app.resource.adm_user import UserAdminResource
+from app.resource.reset_password import ResetPasswordResource
