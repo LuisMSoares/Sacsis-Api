@@ -1,1 +1,2 @@
-from app.services.user_confirmation import ValidateUser
+from app.services.token import Token
+from app.services.send_email import SendEmail

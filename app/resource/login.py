@@ -1,6 +1,7 @@
 from flask_jwt_extended import create_access_token
 from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel
+from app.services import SendEmail
 from app.resource import message
 
 user_field = {
@@ -10,7 +11,8 @@ user_field = {
     'matricula': fields.String,
     'cpf': fields.String,
     'rg': fields.String,
-    'status_pago': fields.Boolean
+    'status_pago': fields.Boolean,
+    'camiseta': fields.String
 }
 
 
@@ -22,6 +24,19 @@ class LoginResource(Resource):
         if not user.verify_password(request.json['senha']):
             return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
+        data = {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}
+        if not user.ativo:
+            data['ativo'] = False
         if user.admin:
-            return {'jwt_token':jwt_token,'admin': True, 'dados': marshal(user, user_field)}, 200
-        return {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}, 200
+            data['admin'] = True
+        return data, 200
+
+    def get(self):
+        user = UserModel.query.filter_by(email=request.json['login']).first()
+        if not user:
+            return marshal({'message':'Login para o usuario não encontrado'}, message), 401
+        tpass, email = user.hash_reset_password(), user.email
+        SendEmail.reset_password('SACSIS XI - Redefinição de senha', email, tpass)
+        return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
+
+    def put(self):

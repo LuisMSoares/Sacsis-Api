@@ -20,9 +20,9 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 # Email Server Configuration
 app.config['MAIL_SERVER']=environ.get('MAIL_SERVER','smtp.gmail.com')
 app.config['MAIL_PORT'] = environ.get('MAIL_PORT',465)
-app.config['MAIL_USERNAME'] = environ.get('MAIL_USERNAME','yourId@gmail.com')
-app.config['MAIL_PASSWORD'] = environ.get('MAIL_PASSWORD','yourpassword')
-app.config['MAIL_DEFAULT_SENDER'] = environ.get('MAIL_DEFAULT_SENDER','yourId@gmail.com')
+app.config['MAIL_USERNAME'] = environ.get('MAIL_USERNAME','shinodu.dev@gmail.com')
+app.config['MAIL_PASSWORD'] = environ.get('MAIL_PASSWORD','passatempodev23')
+app.config['MAIL_DEFAULT_SENDER'] = environ.get('MAIL_DEFAULT_SENDER','shinodu.dev@gmail.com')
 app.config['MAIL_USE_TLS'] = environ.get('MAIL_USE_TLS',False)
 app.config['MAIL_USE_SSL'] = environ.get('MAIL_USE_SSL',True)
 
@@ -69,10 +69,8 @@ with app.app_context():
     if not user:
         user = UserModel(
             nome='Administrador Mestre',
-            matricula='0000',
-            cpf='00000000000',
-            rg='00000000000',
-            admin=True
+            matricula='0', cpf='0', rg='0',
+            camiseta='0', admin=True
         )
     user.email = environ.get('MASTER_ADM_LOGIN','admin')
     user.hash_password( environ.get('MASTER_ADM_PASSWORD','admin') )

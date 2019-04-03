@@ -1,6 +1,8 @@
 from app.db import db
 from passlib.apps import custom_app_context as pwd_context
+from passlib import pwd
 from datetime import datetime
+from random import randint
 
 
 class UserModel(db.Model):
@@ -12,17 +14,25 @@ class UserModel(db.Model):
     matricula = db.Column(db.String(10), nullable=False)
     cpf = db.Column(db.String(11), nullable=False)
     rg = db.Column(db.String(15), nullable=False)
+    camiseta = db.Column(db.String(25), nullable=False)
     senha = db.Column(db.String, nullable=False)
+    senha_reset = db.Column(db.String)
 
+    ativo = db.Column(db.Boolean, default=False)
     status_pago = db.Column(db.Boolean, default=False)
     admin = db.Column(db.Boolean, default=False)
 
 
+    def hash_reset_password(self):
+        temp_pass = pwd.genword(entropy=86)
+        self.senha_reset = pwd_context.encrypt(temp_pass)
+        return temp_pass
+
     def hash_password(self, senha):
         self.senha = pwd_context.encrypt(senha)
+        self.senha_reset = ''
 
     def verify_password(self, senha):
-        # return True or False
         return pwd_context.verify(senha, self.senha)
 
 
@@ -43,13 +53,3 @@ class CoursesModel(db.Model):
     def inserir_datas(self, data_inicio, data_fim):
         self.data_inicio = datetime.strptime(str(data_inicio),"%Y-%m-%d %H:%M:%S")
         self.data_fim = datetime.strptime(str(data_fim),"%Y-%m-%d %H:%M:%S")
-
-
-class ShirtModel(db.Model):
-    __tablename__ = 'camisetas'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    size = db.Column(db.String(20), nullable=False)
-
-
