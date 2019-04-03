@@ -36,6 +36,23 @@ class UserModel(db.Model):
         return pwd_context.verify(senha, self.senha)
 
 
+class ResetPasswordModel(db.Model):
+    __tablename__ = 'senha_opcional'
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    senha = db.Column(db.String, nullable=False)
+
+
+    def generate_password(self):
+        temp_pass = pwd.genword(entropy=86)
+        self.senha_reset = pwd_context.encrypt(temp_pass)
+        return temp_pass
+
+    def verify_password(self, senha):
+        return pwd_context.verify(senha, self.senha)
+
+
 class CoursesModel(db.Model):
     __tablename__ = 'minicursos'
 

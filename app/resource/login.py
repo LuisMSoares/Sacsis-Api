@@ -1,7 +1,6 @@
 from flask_jwt_extended import create_access_token
 from flask_restful import Resource, request, marshal, fields
-from app.db import db, UserModel
-from app.services import SendEmail
+from app.db import UserModel
 from app.resource import message
 
 user_field = {
@@ -30,13 +29,3 @@ class LoginResource(Resource):
         if user.admin:
             data['admin'] = True
         return data, 200
-
-    def get(self):
-        user = UserModel.query.filter_by(email=request.json['login']).first()
-        if not user:
-            return marshal({'message':'Login para o usuario não encontrado'}, message), 401
-        tpass, email = user.hash_reset_password(), user.email
-        SendEmail.reset_password('SACSIS XI - Redefinição de senha', email, tpass)
-        return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
-
-    def put(self):
