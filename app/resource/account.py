@@ -1,8 +1,10 @@
 from flask_jwt_extended import ( create_access_token, jwt_required, get_jwt_identity )
 from flask_restful import Resource, request, marshal, fields
+from flask import current_app
 from app.db import db, UserModel, ResetPasswordModel
 from app.services import SendEmail, Token
 from app.resource import message
+from threading import Thread
 
 
 class ResetPasswordResource(Resource):
@@ -22,9 +24,13 @@ class ResetPasswordResource(Resource):
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
-        SendEmail.reset_password('SACSIS XI - Redefinição de senha', user.email, tpass)
-        #return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
-        return marshal({'message':tpass}, message), 200
+        #SendEmail.reset_password('SACSIS XI - Redefinição de senha', user.email, tpass)
+        mail_app = current_app._get_current_object()
+        Thread(target=SendEmail.reset_password, args=[
+            mail_app, 'SACSIS XI - Redefinição de senha', user.email, tpass
+        ]).start()
+        return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
+        #return marshal({'message':tpass}, message), 200
 
     @jwt_required
     def put(self):

@@ -43,7 +43,7 @@ class ResetPasswordModel(db.Model):
 
 
     def generate_password(self):
-        temp_pass = pwd.genword(entropy=86)
+        temp_pass = pwd.genword(entropy=64)
         self.senha = pwd_context.encrypt(temp_pass)
         return temp_pass
 
