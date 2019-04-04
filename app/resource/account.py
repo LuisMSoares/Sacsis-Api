@@ -27,7 +27,7 @@ class ResetPasswordResource(Resource):
         #SendEmail.reset_password('SACSIS XI - Redefinição de senha', user.email, tpass)
         mail_app = current_app._get_current_object()
         Thread(target=SendEmail.reset_password, args=[
-            mail_app, 'SACSIS XI - Redefinição de senha', user.email, tpass
+            mail_app, 'SACSIS - Redefinição de senha', user.email, tpass
         ]).start()
         return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
         #return marshal({'message':tpass}, message), 200
