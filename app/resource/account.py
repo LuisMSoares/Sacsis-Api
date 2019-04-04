@@ -1,9 +1,9 @@
-from flask_jwt_extended import ( create_access_token, jwt_required, get_jwt_identity )
+from flask_jwt_extended import ( create_access_token, get_jwt_identity )
+from app.resource import message, jwt_token_required_custom
 from flask_restful import Resource, request, marshal, fields
 from flask import current_app
 from app.db import db, UserModel, ResetPasswordModel
 from app.services import SendEmail, Token
-from app.resource import message
 from threading import Thread
 
 
@@ -32,7 +32,7 @@ class ResetPasswordResource(Resource):
         return marshal({'message':'Senha temporaria enviada por email.'}, message), 200
         #return marshal({'message':tpass}, message), 200
 
-    @jwt_required
+    @jwt_token_required_custom
     def put(self):
         user_id = get_jwt_identity()
         reset_user = ResetPasswordModel.query.filter_by(usuario_id=user_id).first()

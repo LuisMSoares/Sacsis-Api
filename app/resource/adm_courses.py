@@ -1,4 +1,4 @@
-from flask_jwt_extended import ( jwt_required, get_jwt_identity )
+from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, request, fields, marshal
 from app.db import db, CoursesModel
 from app.resource import message, admin_required

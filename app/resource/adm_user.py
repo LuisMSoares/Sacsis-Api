@@ -1,4 +1,4 @@
-from flask_jwt_extended import ( jwt_required, get_jwt_identity )
+from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, marshal, fields, request
 from app.db import db, UserModel
 from os import environ
