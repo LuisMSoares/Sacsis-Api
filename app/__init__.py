@@ -44,6 +44,24 @@ def not_found(error):
     return jsonify({'Error': 'Route not found'}), 404
 
 
+from app.services import Token
+@app.route('/activate_account/<token>')
+def activate_account(token):
+    try:
+        if not token:
+            return '<h1> Token de validação não encontrado! </h1>'
+        status, msg_mail = Token.validate(token)
+        if status:
+            user = UserModel.query.filter_by(email=msg_mail).first()
+            user.activate_account()
+            db.session.commit()
+            return '<h1> Conta ativada com sucesso! </h1>'
+        else:
+            return f'<h1> {msg_mail} </h1>'
+    except:
+        return '<h1> Ocorreu um erro ao confirmar sua conta! </h1>'
+
+
 # Resources app registration
 from app.resource import (UserResource, LoginResource, 
 UserAdminResource, CoursesResource, ResetPasswordResource)

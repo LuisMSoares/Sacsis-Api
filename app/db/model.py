@@ -30,6 +30,9 @@ class UserModel(db.Model):
     def verify_password(self, senha):
         return pwd_context.verify(senha, self.senha)
 
+    def activate_account(self):
+        self.ativo = True
+
 
 class ResetPasswordModel(db.Model):
     __tablename__ = 'senha_opcional'

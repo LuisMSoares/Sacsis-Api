@@ -7,24 +7,19 @@ from itsdangerous import (
 
 
 class Token:
-    secret_key = environ.get('TOKEN_KEY','Nyan_passu')
-    token_age = int(environ.get('TOKEN_AGE', 60*60*24))
-    serializer = URLSafeTimedSerializer(secret_key)
-
     @staticmethod
     def generate(email):
+        serializer = URLSafeTimedSerializer( environ.get('TOKEN_KEY','Nyan_passu') )
         return serializer.dumps(email, salt='user-confirmation')
 
     @staticmethod
     def validate(token):
+        serializer = URLSafeTimedSerializer( environ.get('TOKEN_KEY','Nyan_passu') )
         try:
             email = serializer.loads(
                 token,
-                salt='user-confirmation',
-                max_age=token_age
+                salt='user-confirmation'
             )
-        except SignatureExpired:
-            return (False, {'message': 'Token expirado!'})
         except BadTimeSignature:
-            return (False, {'message': 'Token invalido!'})
+            return (False, {'message': 'Token informado invalido!'})
         return (True, email)

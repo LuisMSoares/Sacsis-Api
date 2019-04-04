@@ -1,7 +1,10 @@
 from flask_jwt_extended import ( jwt_required, get_jwt_identity )
 from flask_restful import Resource, request, marshal, fields
+from flask import url_for
 from app.db import db, UserModel
 from app.resource import message
+from app.services import SendEmail
+#from app import activate_account
 
 user_field = {
     'id': fields.Integer,
@@ -33,6 +36,8 @@ class UserResource(Resource):
             db.session.rollback()
             return marshal({'message':'Endereço de email já cadastrado'}, message), 422
         else:
+            link = url_for('activate_account', token='token', _external=True)
+            SendEmail.user_confirm('SACSIS - Confirmação de cadastro', user.email, link)
             return marshal({'message':'Usuário cadastrado'}, message), 201
 
 

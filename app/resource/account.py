@@ -1,7 +1,7 @@
 from flask_jwt_extended import ( create_access_token, jwt_required, get_jwt_identity )
 from flask_restful import Resource, request, marshal, fields
 from app.db import db, UserModel, ResetPasswordModel
-from app.services import SendEmail
+from app.services import SendEmail, Token
 from app.resource import message
 
 

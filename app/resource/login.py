@@ -21,7 +21,11 @@ class LoginResource(Resource):
         user = UserModel.query.filter_by(email=request.json['login']).first()
         if not user:
             return marshal({'message':'Login para o usuario não encontrado'}, message), 401
+        # Bloqueia o acesso caso a conta não tenha sido confirmada
+        if not user.ativo:
+            return marshal({'message':'Cadastro não confirmado.'}, message), 403
         if not user.verify_password(request.json['senha']):
+            # Verifica se existe uma
             reset_user = user.senha_temporaria
             if reset_user:
                 if reset_user.verify_password(request.json['senha']):
@@ -32,8 +36,6 @@ class LoginResource(Resource):
                 return marshal({'message':'Senha informada incorreta'}, message), 401
         jwt_token = create_access_token(identity=user.id)
         data = {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}
-        if not user.ativo:
-            data['ativo'] = False
         if user.admin:
             data['admin'] = True
         if reset_user:

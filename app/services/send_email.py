@@ -1,17 +1,19 @@
 from app import mail
 from app.services import Token
 from flask_mail import Message
+from flask_restful import url_for
+#from app.resource import ActiveAccountResource
 from os import environ
 
 
 class SendEmail:
     secret_key = environ.get('','Nyan_passu')
 
-    def user_confirm(title, email):
-        msg = Message(title, recipients=email)
-        token = Token.generate(email)
+    def user_confirm(title, email, link):
+        msg = Message(title, recipients=[email])
+        link = link.replace('token', Token.generate(email))
         msg.body = f'''Clique no link abaixo para confirmar seu cadastro
-        {token}
+        {link}
         '''
         mail.send(msg)
 
