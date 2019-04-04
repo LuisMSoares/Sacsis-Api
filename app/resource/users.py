@@ -1,11 +1,10 @@
-from flask_jwt_extended import ( jwt_required, get_jwt_identity )
+from flask_jwt_extended import get_jwt_identity
+from app.resource import message, jwt_token_required_custom
 from flask_restful import Resource, request, marshal, fields
 from flask import url_for, current_app
 from app.db import db, UserModel
-from app.resource import message
 from app.services import SendEmail
 from threading import Thread
-#from app import activate_account
 
 user_field = {
     'id': fields.Integer,
@@ -45,7 +44,7 @@ class UserResource(Resource):
             return marshal({'message':'Usuário cadastrado'}, message), 201
 
 
-    @jwt_required
+    @jwt_token_required_custom
     def put(self):
         user = UserModel.query.filter_by(id=get_jwt_identity()).first()
         if not user:
@@ -69,7 +68,7 @@ class UserResource(Resource):
             return marshal(user, user_field)
 
 
-    @jwt_required
+    @jwt_token_required_custom
     def get(self):
         user = UserModel.query.filter_by(id=get_jwt_identity()).first()
         if not user:
