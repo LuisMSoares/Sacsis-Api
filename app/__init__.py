@@ -94,6 +94,7 @@ with app.app_context():
         )
     user.email = environ.get('MASTER_ADM_LOGIN','admin')
     user.hash_password( environ.get('MASTER_ADM_PASSWORD','admin') )
+    user.activate_account()
     try:
         db.session.add(user)
         db.session.commit()
