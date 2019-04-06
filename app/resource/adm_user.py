@@ -82,6 +82,8 @@ class UserAdminResource(Resource):
         if not user_id:
             return marshal({'message':'Informe o id do usuário'}, message), 404
         user = UserModel.query.filter_by(id=user_id).first()
+        if not user:
+            return marshal({'message':'Usuário não encontrado'}, message), 404
         try:
             db.session.delete(user)
             db.session.commit()

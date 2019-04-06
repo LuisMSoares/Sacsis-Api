@@ -64,9 +64,9 @@ def activate_account(token):
 
 # Resources app registration
 from app.resource import (UserResource, LoginResource, 
-UserAdminResource, CoursesResource, ResetPasswordResource)
+UserAdminResource, TeachResource, ResetPasswordResource)
 
-api.add_resource(CoursesResource, '/admin/course', '/admin/course/<int:course_id>')
+api.add_resource(TeachResource, '/admin/teach', '/admin/teach/<int:teach_id>')
 api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
 
 api.add_resource(UserResource, '/user')
@@ -78,8 +78,8 @@ api.add_resource(ResetPasswordResource, '/reset_password')
 with app.app_context():
     try:
         # remove this in production
-        #db.drop_all()
-        #print(' * Drop all tables!')
+        db.drop_all()
+        print(' * Drop all tables!')
 
         db.create_all()
     except:
