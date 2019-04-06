@@ -83,8 +83,8 @@ class CourseModel(db.Model):
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
-    ministrante_id = db.Column(db.Integer, db.ForeignKey('ministrante.id'))
-    ministrante = db.relationship('TeachModel', backref='course')
+    ministrante = db.Column(db.String(20), db.ForeignKey('ministrante.cpf'))
+    teach = db.relationship('TeachModel', backref='course')
 
 
     def set_created_data(self):
@@ -99,8 +99,8 @@ class LectureModel(db.Model):
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
-    ministrante_id = db.Column(db.Integer, db.ForeignKey('ministrante.id'))
-    ministrante = db.relationship('TeachModel', backref='lecture')
+    ministrante = db.Column(db.String(20), db.ForeignKey('ministrante.cpf'))
+    teach = db.relationship('TeachModel', backref='lecture')
 
 
     def set_created_data(self):
