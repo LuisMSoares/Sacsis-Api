@@ -34,12 +34,18 @@ class CourseResource(Resource):
             teach.instagram = request.json['instagram'] or ''
             teach.site = request.json['site'] or ''
             teach.set_gravatar(request.json['gravatar'])
-
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            return marshal(
+                {'message':'Ocorreu um erro ao adicionar as informações do ministrante!'}, 
+                message), 422
         # realiza a criação do minicurso
         course = CourseModel(
             titulo = request.json['titulo'],
             conteudo = request.json['conteudo'],
-            ministrante = request.json['cpf']
+            teach = teach
         )
         course.set_created_data()
         db.session.add(course)

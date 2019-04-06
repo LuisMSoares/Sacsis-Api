@@ -83,7 +83,7 @@ class CourseModel(db.Model):
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
-    ministrante = db.Column(db.String(20), db.ForeignKey('ministrante.cpf'))
+    ministrante_id = db.Column(db.Integer, db.ForeignKey('ministrante.id'))
     teach = db.relationship('TeachModel', backref='course')
 
 
@@ -99,7 +99,7 @@ class LectureModel(db.Model):
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
-    ministrante = db.Column(db.String(20), db.ForeignKey('ministrante.cpf'))
+    ministrante_id = db.Column(db.Integer, db.ForeignKey('ministrante.id'))
     teach = db.relationship('TeachModel', backref='lecture')
 
 
