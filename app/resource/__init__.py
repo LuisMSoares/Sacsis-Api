@@ -49,5 +49,5 @@ from app.resource.users import UserResource
 from app.resource.login import LoginResource
 from app.resource.adm_user import UserAdminResource
 from app.resource.account import ResetPasswordResource
-from app.resource.adm_teach import TeachResource
-from app.resource.courses import CourseResource
+from app.resource.adm_speaker import SpeakerResource
+from app.resource.speacker import CourseResource, LectureResource

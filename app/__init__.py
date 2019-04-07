@@ -64,12 +64,13 @@ def activate_account(token):
 
 # Resources app registration
 from app.resource import (UserResource, LoginResource, 
-UserAdminResource, TeachResource, ResetPasswordResource,
-CourseResource)
+UserAdminResource, SpeakerResource, ResetPasswordResource,
+CourseResource, LectureResource)
 
 api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
-api.add_resource(TeachResource, '/admin/teach', '/admin/teach/<int:teach_id>')
+api.add_resource(SpeakerResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
 api.add_resource(CourseResource, '/admin/course')
+api.add_resource(LectureResource, '/admin/lecture')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(LoginResource, '/login')

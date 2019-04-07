@@ -51,7 +51,7 @@ class ResetPasswordModel(db.Model):
         return pwd_context.verify(senha, self.senha)
 
 
-class TeachModel(db.Model):
+class SpeakerModel(db.Model):
     __tablename__ = 'ministrante'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -68,6 +68,9 @@ class TeachModel(db.Model):
     site = db.Column(db.String(50), default=None)
 
 
+    lecture = db.relationship('LectureModel', passive_deletes=True)
+    course = db.relationship('CourseModel', passive_deletes=True)
+
     def set_created_data(self):
         self.criado_em = datetime.now()
 
@@ -76,15 +79,16 @@ class TeachModel(db.Model):
 
 
 class CourseModel(db.Model):
-    __tablename__ = 'minicursos'
+    __tablename__ = 'minicurso'
 
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(50), nullable=False)
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
-    ministrante_id = db.Column(db.Integer, db.ForeignKey('ministrante.id'))
-    teach = db.relationship('TeachModel', backref='course')
+    ministrante_id = db.Column(db.Integer,
+        db.ForeignKey('ministrante.id', ondelete="CASCADE"))
+    speaker = db.relationship('SpeakerModel')
 
 
     def set_created_data(self):
@@ -92,15 +96,16 @@ class CourseModel(db.Model):
 
 
 class LectureModel(db.Model):
-    __tablename__ = 'palestras'
+    __tablename__ = 'palestra'
 
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(50), nullable=False)
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
-    ministrante_id = db.Column(db.Integer, db.ForeignKey('ministrante.id'))
-    teach = db.relationship('TeachModel', backref='lecture')
+    ministrante_id = db.Column(db.Integer,
+        db.ForeignKey('ministrante.id', ondelete="CASCADE"))
+    speaker = db.relationship('SpeakerModel')
 
 
     def set_created_data(self):

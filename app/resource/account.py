@@ -3,7 +3,7 @@ from app.resource import message, jwt_token_required_custom
 from flask_restful import Resource, request, marshal, fields
 from flask import current_app
 from app.db import db, UserModel, ResetPasswordModel
-from app.services import SendEmail, Token
+from app.services import SendEmail
 from threading import Thread
 
 
