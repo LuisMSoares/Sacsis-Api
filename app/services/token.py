@@ -8,18 +8,15 @@ from itsdangerous import (
 
 class Token:
     @staticmethod
-    def generate(email):
+    def generate(data):
         serializer = URLSafeTimedSerializer( environ.get('TOKEN_KEY','Nyan_passu') )
-        return serializer.dumps(email, salt='user-confirmation')
+        return serializer.dumps(data, salt='#d%@iHl&')
 
     @staticmethod
     def validate(token):
         serializer = URLSafeTimedSerializer( environ.get('TOKEN_KEY','Nyan_passu') )
         try:
-            email = serializer.loads(
-                token,
-                salt='user-confirmation'
-            )
+            data = serializer.loads(token, salt='#d%@iHl&')
         except BadTimeSignature:
             return (False, {'message': 'Token informado invalido!'})
-        return (True, email)
+        return (True, data)

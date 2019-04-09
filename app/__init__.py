@@ -69,8 +69,8 @@ CourseResource, LectureResource)
 
 api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
 api.add_resource(SpeakerResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
-api.add_resource(CourseResource, '/admin/course')
-api.add_resource(LectureResource, '/admin/lecture')
+api.add_resource(CourseResource, '/admin/course/<token>')
+api.add_resource(LectureResource, '/admin/lecture/<token>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(LoginResource, '/login')

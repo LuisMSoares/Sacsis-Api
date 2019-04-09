@@ -1,38 +1,58 @@
 from flask_restful import Resource, fields, marshal, request
-from app.db import db, SpeakerModel, CourseModel, LectureModel
+from app.db import db, SpeakerModel, CourseModel, LectureModel, TokenBlacklistModel
 from app.resource import message
+from datetime import datetime
+from app.services import Token
 
 
-def SpeakerReg(rjson):
-    def set_speaker_data(rjson, speakerObj=SpeakerModel()):
-        speakerObj.nome = rjson['nome']
-        speakerObj.resumo = rjson['resumo']
-        speakerObj.rg = rjson['rg']
-        speakerObj.cpf = rjson['cpf']
-        speakerObj.facebook = rjson['facebook'] or ''
-        speakerObj.twitter = rjson['twitter'] or ''
-        speakerObj.instagram = rjson['instagram'] or ''
-        speakerObj.site = rjson['site'] or ''
-        speakerObj.set_gravatar( rjson['gravatar'] )
-        return speakerObj
-
-    speaker = SpeakerModel.query.filter_by(cpf=rjson['cpf']).first()
-    if not speaker:
-        speaker = set_speaker_data(rjson=rjson)
-        speaker.set_created_data()
-        db.session.add(speaker)
-    else:
-        speaker = set_speaker_data(rjson=rjson, speakerObj=speaker)
-    try:
-        db.session.commit()
-        return (True, speaker)
-    except:
-        db.session.rollback()
-        return (False,)
+class SpeakerResource(Resource):
+    def post(self,token):
+        # verifica a validade do token
+        token_bl = TokenBlacklistModel.query.filter_by(token).first()
+        if not token_bl:
+            return marshal({'message':'Token informado já foi utilizado!'}, message), 401
+        token_data = Token.validate(token)
+        if not token_data[0]:
+            return marshal(token_data[1], message), 401
+        if int(datetime.now().timestamp()) > token_data['limit']:
+            return marshal({'message':'Token informado expirado!'}, message), 401
+        else:
+            
 
 
-class CourseResource(Resource):
-    def post(self):
+
+
+        
+
+    def SpeakerReg(self, rjson):
+        def set_speaker_data(rjson, speakerObj=SpeakerModel()):
+            speakerObj.nome = rjson['nome']
+            speakerObj.resumo = rjson['resumo']
+            speakerObj.rg = rjson['rg']
+            speakerObj.cpf = rjson['cpf']
+            speakerObj.facebook = rjson['facebook'] or ''
+            speakerObj.twitter = rjson['twitter'] or ''
+            speakerObj.instagram = rjson['instagram'] or ''
+            speakerObj.site = rjson['site'] or ''
+            speakerObj.set_gravatar( rjson['gravatar'] )
+            return speakerObj
+
+        speaker = SpeakerModel.query.filter_by(cpf=rjson['cpf']).first()
+        if not speaker:
+            speaker = set_speaker_data(rjson=rjson)
+            speaker.set_created_data()
+            db.session.add(speaker)
+        else:
+            speaker = set_speaker_data(rjson=rjson, speakerObj=speaker)
+        try:
+            db.session.commit()
+            return (True, speaker)
+        except:
+            db.session.rollback()
+            return (False,)
+
+
+    def CourseReg(self, token=None):
         # Cadastro de ministrante
         speaker = SpeakerReg(rjson=request.json)
         if not speaker[0]:
@@ -57,8 +77,7 @@ class CourseResource(Resource):
         return marshal({'message':'Minicurso cadastrado com sucesso.'}, message), 201
 
 
-class LectureResource(Resource):   
-    def post(self):
+    def LectureReg(self, token=None):
         # Cadastro de ministrante
         speaker = SpeakerReg(rjson=request.json)
         if not speaker[0]:

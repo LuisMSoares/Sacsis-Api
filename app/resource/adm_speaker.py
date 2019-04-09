@@ -1,6 +1,8 @@
 from flask_restful import Resource, marshal, fields, request
 from app.db import db, SpeakerModel
 from app.resource import message, admin_required
+from app.services import Token
+from datetime import datetime
 from sqlalchemy import or_
 
 speaker_admin_field = {
@@ -18,6 +20,9 @@ speaker_admin_field = {
 speaker_admin_list_fields = {
     'quantidade': fields.Integer,
     'ministrantes': fields.List(fields.Nested(speaker_admin_field)),
+}
+token_field = {
+    'token': fields.String
 }
 
 
@@ -45,6 +50,17 @@ class SpeakerResource(Resource):
 
     @admin_required
     def post(self):
+        # gera um token de acesso para os ministrantes se cadastrarem
+        # token_generate=lecture or course | limit_time=1 or 2 or n_days
+        token_generate = request.args.get('token_generate', None)
+        if not token_generate:
+            limit_time = request.args.get('limit_time', 1)
+            limit_time = 1 if limit_time==0 else limit_time
+            limit_time = int(datetime.now().timestamp()) + limit_time * 86400
+            token_data = {'type':token_generate,'limit':limit_time}
+            token = Token.generate(token_data)
+            return marshal({'token':token}, token_field), 200
+
         speaker = SpeakerModel(
             nome = request.json['nome'],
             resumo = request.json['resumo'],

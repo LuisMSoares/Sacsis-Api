@@ -110,3 +110,10 @@ class LectureModel(db.Model):
 
     def set_created_data(self):
         self.criado_em = datetime.now()
+
+
+class TokenBlacklistModel(db.Model):
+    __tablename__ = 'token_blacklist'
+
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String, nullable=False)
