@@ -26,7 +26,7 @@ token_field = {
 }
 
 
-class SpeakerResource(Resource):
+class SpeakerAdminResource(Resource):
     @admin_required
     def get(self):
         if self.rjvfy(request):
@@ -47,20 +47,8 @@ class SpeakerResource(Resource):
             },speaker_admin_list_fields), 200
 
 
-
     @admin_required
     def post(self):
-        # gera um token de acesso para os ministrantes se cadastrarem
-        # token_generate=lecture or course | limit_time=1 or 2 or n_days
-        token_generate = request.args.get('token_generate', None)
-        if not token_generate:
-            limit_time = request.args.get('limit_time', 1)
-            limit_time = 1 if limit_time==0 else limit_time
-            limit_time = int(datetime.now().timestamp()) + limit_time * 86400
-            token_data = {'type':token_generate,'limit':limit_time}
-            token = Token.generate(token_data)
-            return marshal({'token':token}, token_field), 200
-
         speaker = SpeakerModel(
             nome = request.json['nome'],
             resumo = request.json['resumo'],

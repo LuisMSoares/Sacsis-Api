@@ -14,7 +14,7 @@ course_field = {
 }
 
 
-class CoursesResource(Resource):
+class CourseAdminResource(Resource):
     @admin_required
     def post(self):
         course = CoursesModel(

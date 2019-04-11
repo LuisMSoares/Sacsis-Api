@@ -1,8 +1,8 @@
 from os import environ
 from itsdangerous import (
-    URLSafeTimedSerializer, 
-    SignatureExpired, 
-    BadTimeSignature
+    URLSafeTimedSerializer,
+    BadTimeSignature,
+    BadSignature
 )
 
 
@@ -17,6 +17,6 @@ class Token:
         serializer = URLSafeTimedSerializer( environ.get('TOKEN_KEY','Nyan_passu') )
         try:
             data = serializer.loads(token, salt='#d%@iHl&')
-        except BadTimeSignature:
+        except (BadTimeSignature, BadSignature):
             return (False, {'message': 'Token informado invalido!'})
         return (True, data)
