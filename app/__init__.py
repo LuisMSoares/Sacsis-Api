@@ -1,5 +1,5 @@
 from os import environ
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
@@ -39,64 +39,25 @@ api = Api(app)
 api.prefix = '/api'
 
 
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({'Error': 'Route not found'}), 404
-
-
-from app.services import Token
-@app.route('/activate_account/<token>')
-def activate_account(token):
-    try:
-        if not token:
-            return '<h1> Token de validação não encontrado! </h1>'
-        status, msg_mail = Token.validate(token)
-        if status:
-            user = UserModel.query.filter_by(email=msg_mail).first()
-            user.activate_account()
-            db.session.commit()
-            return '<h1> Conta ativada com sucesso! </h1>'
-        else:
-            return f'<h1> {msg_mail} </h1>'
-    except:
-        return '<h1> Ocorreu um erro ao confirmar sua conta! </h1>'
+# Custom routes from application
+from app.services.custom_routes import *
 
 
 # Resources app registration
 from app.resource import (UserResource, LoginResource, 
-UserAdminResource, CoursesResource, ResetPasswordResource)
+UserAdminResource, SpeakerResource, ResetPasswordResource,
+)
 
-api.add_resource(CoursesResource, '/admin/course', '/admin/course/<int:course_id>')
 api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
+#api.add_resource(CourseAdminResource, '/admin/course', '/admin/course/<int:course_id>')
+#api.add_resource(SpeakerAdminResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
 
 api.add_resource(UserResource, '/user')
+api.add_resource(SpeakerResource, '/speaker', '/speaker/')
+
 api.add_resource(LoginResource, '/login')
 api.add_resource(ResetPasswordResource, '/reset_password')
 
 
-
-with app.app_context():
-    try:
-        # remove this in production
-        #db.drop_all()
-        #print(' * Drop all tables!')
-
-        db.create_all()
-    except:
-        ...
-    #Master Administrator Registration
-    user = UserModel.query.filter_by(nome='Administrador Mestre').first()
-    if not user:
-        user = UserModel(
-            nome='Administrador Mestre',
-            matricula='0', cpf='0', rg='0',
-            camiseta='0', admin=True
-        )
-    user.email = environ.get('MASTER_ADM_LOGIN','admin')
-    user.hash_password( environ.get('MASTER_ADM_PASSWORD','admin') )
-    user.activate_account()
-    try:
-        db.session.add(user)
-        db.session.commit()
-    except:
-        db.session.rollback()
+# Drop database and master administrator registration
+from app.services.adm_master import *
