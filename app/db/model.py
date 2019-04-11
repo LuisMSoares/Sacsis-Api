@@ -59,8 +59,9 @@ class SpeakerModel(db.Model):
     resumo = db.Column(db.String(250), nullable=False)
     rg = db.Column(db.String(20), nullable=False, unique=True)
     cpf = db.Column(db.String(20), nullable=False, unique=True)
+    img_nome = db.Column(db.String, nullable=False)
+    img_dados = db.Column(db.LargeBinary, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
-    gravatar = db.Column(db.String(50), default=None)
     # redes sociais
     facebook = db.Column(db.String(50), default=None)
     twitter = db.Column(db.String(50), default=None)
@@ -74,8 +75,10 @@ class SpeakerModel(db.Model):
     def set_created_data(self):
         self.criado_em = datetime.now()
 
-    def set_gravatar(self, email):
-        self.gravatar = md5(email.lower().encode('utf-8')).hexdigest()
+    def set_avatar(self, image_file):
+        self.img_nome = image_file.filename
+        self.img_dados = image_file.read()
+
 
 
 class CourseModel(db.Model):
@@ -117,3 +120,11 @@ class TokenBlacklistModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String, nullable=False)
+
+
+class ImagesModel(db.Model):
+    __tablename__ = 'imagens'
+
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String, nullable=False)
+    dados = db.Column(db.LargeBinary, nullable=False)

@@ -3,6 +3,7 @@ from app.db import db, SpeakerModel, CourseModel, LectureModel, TokenBlacklistMo
 from app.resource import message, admin_required
 from datetime import datetime
 from app.services import Token
+import json
 
 token_field = {
     'route_type' : fields.String,
@@ -29,7 +30,8 @@ class SpeakerResource(Resource):
         return marshal(response, token_field), 201
 
 
-    def post(self, token=None):
+    def post(self):
+        token = request.args.get('token', None)
         # verifica a validade do token
         token_bl = TokenBlacklistModel.query.filter_by(token=token).first()
         if token_bl:
@@ -41,16 +43,17 @@ class SpeakerResource(Resource):
             return marshal(token_data, message), 401
         if int(datetime.now().timestamp()) > token_data['expiration']:
             return marshal({'message':'Token informado expirado!'}, message), 401
-        elif token_data['route_type'] == 'lecture' == request.json['type_form']:
-            return self.LectureReg(rjson=request.json ,token=token)
-        elif token_data['route_type'] == 'course' == request.json['type_form']:
-            return self.CourseReg(rjson=request.json ,token=token)
+        rjson, avatar = json.loads(request.form['json_data']), request.files['avatar']
+        if token_data['route_type'] == 'lecture' == rjson['type_form']:
+            return self.LectureReg(rjson, avatar, token)
+        elif token_data['route_type'] == 'course' == rjson['type_form']:
+            return self.CourseReg(rjson, avatar, token)
         return marshal({'message':'Token invalido para este tipo de formulario!'}, message), 401
 
-
-    def CourseReg(self, rjson, token=None):
+    
+    def CourseReg(self, rjson, avatar, token=None):
         # Cadastro de ministrante
-        speaker = self.SpeakerReg(rjson=rjson)
+        speaker = self.SpeakerReg(rjson, avatar)
         if not speaker[0]:
             return marshal(
                 {'message':'Ocorreu um erro ao adicionar as informações do ministrante!'}, 
@@ -74,9 +77,9 @@ class SpeakerResource(Resource):
         return marshal({'message':'Minicurso cadastrado com sucesso.'}, message), 201
 
 
-    def LectureReg(self, rjson, token=None):
+    def LectureReg(self, rjson, avatar, token=None):
         # Cadastro de ministrante
-        speaker = self.SpeakerReg(rjson=rjson)
+        speaker = self.SpeakerReg(rjson, avatar)
         if not speaker[0]:
             return marshal(
                 {'message':'Ocorreu um erro ao adicionar as informações do ministrante!'}, 
@@ -111,7 +114,7 @@ class SpeakerResource(Resource):
         except:
             db.session.rollback()
 
-    def SpeakerReg(self, rjson):
+    def SpeakerReg(self, rjson, avatar):
         def set_speaker_data(rjson, speakerObj=SpeakerModel()):
             speakerObj.nome = rjson['nome']
             speakerObj.resumo = rjson['resumo']
@@ -121,15 +124,16 @@ class SpeakerResource(Resource):
             speakerObj.twitter = rjson['twitter'] or ''
             speakerObj.instagram = rjson['instagram'] or ''
             speakerObj.site = rjson['site'] or ''
-            speakerObj.set_gravatar( rjson['gravatar'] )
             return speakerObj
         speaker = SpeakerModel.query.filter_by(cpf=rjson['cpf']).first()
         if not speaker:
-            speaker = set_speaker_data(rjson=rjson)
+            speaker = set_speaker_data(rjson)
             speaker.set_created_data()
+            speaker.set_avatar(avatar)
             db.session.add(speaker)
         else:
-            speaker = set_speaker_data(rjson=rjson, speakerObj=speaker)
+            speaker = set_speaker_data(rjson, speakerObj=speaker)
+            speaker.set_avatar(avatar)
         try:
             db.session.commit()
             return (True, speaker)
