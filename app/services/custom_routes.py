@@ -31,6 +31,8 @@ def activate_account(token):
 def get_image(img_id=None):
     if img_id:
         speaker = SpeakerModel.query.filter_by(id=img_id).first()
+        if not speaker:
+            return jsonify({'message': 'Nenhum ministrante encontrado!'}), 404
         return send_file(BytesIO(speaker.img_dados), 
                 attachment_filename=speaker.img_nome, 
                 as_attachment=False
