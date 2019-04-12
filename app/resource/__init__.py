@@ -46,7 +46,7 @@ def jwt_token_required_custom(fn):
 
 
 from app.resource.adm_user import UserAdminResource
-#from app.resource.adm_speaker import SpeakerAdminResource
+from app.resource.adm_speaker import SpeakerAdminResource
 #from app.resource.adm_courses import CourseAdminResource
 
 from app.resource.users import UserResource

@@ -46,11 +46,11 @@ from app.services.custom_routes import *
 # Resources app registration
 from app.resource import (UserResource, LoginResource, 
 UserAdminResource, SpeakerResource, ResetPasswordResource,
-)
+SpeakerAdminResource)
 
 api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
 #api.add_resource(CourseAdminResource, '/admin/course', '/admin/course/<int:course_id>')
-#api.add_resource(SpeakerAdminResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
+api.add_resource(SpeakerAdminResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(SpeakerResource, '/speaker', '/speaker/')
