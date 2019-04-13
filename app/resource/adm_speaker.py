@@ -11,7 +11,6 @@ speaker_admin_field = {
     'resumo' : fields.String,
     'rg' : fields.String,
     'cpf' : fields.String,
-    'gravatar' : fields.String,
     'facebook' : fields.String,
     'twitter' : fields.String,
     'instagram' : fields.String,

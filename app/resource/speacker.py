@@ -16,7 +16,7 @@ class SpeakerResource(Resource):
     @admin_required
     def get(self):
         route_type = request.args.get('type', None)
-        expiration_days = self.limit_time(int(request.args.get('expiration', 0)))
+        expiration_days = self.limit_time(int(request.args.get('expiration', 7)))
         expiration_time = int(datetime.now().timestamp()) + expiration_days * 86400
         if route_type == None:
             return marshal({'message':'Tipo de rota não encontrado.'}, message), 404
@@ -104,7 +104,7 @@ class SpeakerResource(Resource):
 
 
     def limit_time(self, x):
-        return 1 if x<=0 else 3 if x>3 else x
+        return 1 if x<=0 else 7 if x>7 else x
         
     def TokenBlacklist(self, token):
         blacklist = TokenBlacklistModel(token=token)
