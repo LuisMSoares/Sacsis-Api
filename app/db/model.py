@@ -91,8 +91,7 @@ class CourseModel(db.Model):
     
     ministrante_id = db.Column(db.Integer,
         db.ForeignKey('ministrante.id', ondelete="CASCADE"))
-    speaker = db.relationship('SpeakerModel')
-
+    speaker = db.relationship('SpeakerModel', uselist=False)
 
     def set_created_data(self):
         self.criado_em = datetime.now()
@@ -108,8 +107,7 @@ class LectureModel(db.Model):
     
     ministrante_id = db.Column(db.Integer,
         db.ForeignKey('ministrante.id', ondelete="CASCADE"))
-    speaker = db.relationship('SpeakerModel')
-
+    speaker = db.relationship('SpeakerModel', uselist=False)
 
     def set_created_data(self):
         self.criado_em = datetime.now()
