@@ -61,6 +61,8 @@ class SpeakerModel(db.Model):
     cpf = db.Column(db.String(20), nullable=False, unique=True)
     img_nome = db.Column(db.String, nullable=False)
     img_dados = db.Column(db.LargeBinary, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    telefone = db.Column(db.String(20), nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     # redes sociais
     facebook = db.Column(db.String(50), default=None)

@@ -14,6 +14,8 @@ speaker_admin_field = {
     'facebook' : fields.String,
     'twitter' : fields.String,
     'instagram' : fields.String,
+    'email' : fields.String,
+    'telefone' : fields.String,
     'site' : fields.String
 }
 speaker_admin_list_fields = {
@@ -65,6 +67,10 @@ class SpeakerAdminResource(Resource):
             speaker.instagram = rjson['nome']
         if 'site' in rjson:
             speaker.site = rjson['nome']
+        if 'email' in rjson:
+            speaker.email = rjson['email']
+        if 'telefone' in rjson:
+            speaker.telefone = rjson['telefone']
         try:
             db.session.commit()
         except:

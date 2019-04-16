@@ -120,6 +120,8 @@ class SpeakerResource(Resource):
             speakerObj.resumo = rjson['resumo']
             speakerObj.rg = rjson['rg']
             speakerObj.cpf = rjson['cpf']
+            speakerObj.email = rjson['email']
+            speakerObj.telefone = rjson['telefone']
             speakerObj.facebook = rjson['facebook'] or ''
             speakerObj.twitter = rjson['twitter'] or ''
             speakerObj.instagram = rjson['instagram'] or ''
