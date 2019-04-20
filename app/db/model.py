@@ -59,10 +59,10 @@ class SpeakerModel(db.Model):
     resumo = db.Column(db.String(250), nullable=False)
     rg = db.Column(db.String(20), nullable=False, unique=True)
     cpf = db.Column(db.String(20), nullable=False, unique=True)
-    img_nome = db.Column(db.String, nullable=False)
-    img_dados = db.Column(db.LargeBinary, nullable=False)
     email = db.Column(db.String, nullable=False)
     telefone = db.Column(db.String(20), nullable=False)
+    img_nome = db.Column(db.String, nullable=False)
+    img_dados = db.Column(db.LargeBinary, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     # redes sociais
     facebook = db.Column(db.String(50), default=None)
@@ -128,3 +128,37 @@ class ImagesModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String, nullable=False)
     dados = db.Column(db.LargeBinary, nullable=False)
+
+
+class ScheduleModel(db.Model):
+    __tablename__ = 'programacao'
+
+    id = db.Column(db.Integer, primary_key=True)
+    local = db.Column(db.String(50), nullable=False)
+    dia = db.Column(db.Integer, nullable=False)
+    data_inicio = db.Column(db.DateTime, nullable=False)
+    data_fim = db.Column(db.DateTime, nullable=False)
+    # Courses
+    vagas = db.Column(db.Integer, default=None)
+    turma = db.Column(db.String(20), default=None)
+    course_id = db.Column(db.Integer, db.ForeignKey('minicurso.id'))
+    # Lecture
+    lecture_id = db.Column(db.Integer, db.ForeignKey('palestra.id'))
+    # Other
+    titulo = db.Column(db.String, default=None)
+    descricao = db.Column(db.String, default=None)
+
+    lecture = db.relationship('LectureModel', uselist=False)
+    course = db.relationship('CourseModel', uselist=False)
+
+    def setCourse(self, vagas, turma, course):
+        self.vagas = vagas
+        self.turma = turma
+        self.course = course
+
+    def setLecture(self, lecture):
+        self.lecture = lecture
+
+    def setOther(self, titulo, descricao):
+        self.titulo = titulo
+        self.descricao = descricao

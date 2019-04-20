@@ -1,23 +1,52 @@
-from flask_restful import Resource, marshal, request, fields
-from app.db import CourseModel, LectureModel
-from app.resource import message
+from flask_restful import Resource, request, fields, marshal
+from app.db import db, ScheduleModel
+from app.resource import message, admin_required
 
+course_schedule_field = {
+    'id' : fields.Integer,
+    'local': fields.String,
+    'dia' : fields.Integer,
+    'data_inicio' : fields.String(attribute=lambda obj: obj.data_inicio.strftime('%H:%M')),
+    'data_fim' : fields.String(attribute=lambda obj: obj.data_fim.strftime('%H:%M')),
 
-class ScheduleModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    vagas = db.Column(db.Integer)
-    local = db.Column(db.String)
-    hora_inicio = db.Column(db.DateTime, nullable=False)
-    hora_termino = db.Column(db.DateTime, nullable=False)
-    lecture_id = db.Column(db.Integer)
-    course_id = db.Column(db.Integer)
+    'vagas' : fields.Integer,
+    'turma' : fields.String,
+    'minicurso' : fields.String(attribute=lambda obj: obj.course.titulo)
+}
+lecture_schedule_field = {
+    'id' : fields.Integer,
+    'local': fields.String,
+    'dia' : fields.Integer,
+    'data_inicio' : fields.String(attribute=lambda obj: obj.data_inicio.strftime('%H:%M')),
+    'data_fim' : fields.String(attribute=lambda obj: obj.data_fim.strftime('%H:%M')),
 
+    'palestra' : fields.String(attribute=lambda obj: obj.lecture.titulo)
+}
+other_schedule_field = {
+    'id' : fields.Integer,
+    'local': fields.String,
+    'dia' : fields.Integer,
+    'data_inicio' : fields.String(attribute=lambda obj: obj.data_inicio.strftime('%H:%M')),
+    'data_fim' : fields.String(attribute=lambda obj: obj.data_fim.strftime('%H:%M')),
 
-class ScheduleAdminResource(Resource):
+    'titulo' : fields.String,
+    'descricao' : fields.String
+}
+#fields.DateTime(dt_format='iso8601')
+
+class ScheduleResource(Resource):
     def get(self):
-        
-    def post(self):
-
-    def put(self):
-
-    def delete(self):
+        values = {}
+        for i in range(1,8):
+            schedules = ScheduleModel.query.order_by(ScheduleModel.data_inicio).filter_by(dia=i).all()
+            if not schedules:
+                continue
+            values[str(i)] = []
+            for schedule in schedules:
+                if schedule.course_id:
+                    values[str(i)].append(marshal(schedule, course_schedule_field))
+                if schedule.lecture_id:
+                    values[str(i)].append(marshal(schedule, lecture_schedule_field))
+                if not schedule.course_id and not schedule.lecture_id:
+                    values[str(i)].append(marshal(schedule, other_schedule_field))
+        return values, 200

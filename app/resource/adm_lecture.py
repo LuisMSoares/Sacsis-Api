@@ -14,6 +14,11 @@ remove_lecture_field = {
     'titulo': fields.String,
     'conteudo': fields.String
 }
+load_title_field = {
+    'id': fields.Integer,
+    'titulo': fields.String
+}
+
 
 class LectureAdminResource(Resource):
     @admin_required
@@ -36,6 +41,11 @@ class LectureAdminResource(Resource):
 
     @admin_required
     def get(self, lecture_id=None):
+        loadtitle = request.args.get('loadtitle', None)
+        if loadtitle:
+            lectures = LectureModel.query.order_by(LectureModel.id).all()
+            lectures = [marshal(l,load_title_field) for l in lectures]
+            return {'values': lectures}, 200
         if lecture_id:
             lecture = LectureModel.query.filter_by(id=lecture_id).first()
             if not lecture:

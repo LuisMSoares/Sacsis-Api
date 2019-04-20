@@ -2,7 +2,6 @@ from flask_restful import Resource, marshal, fields, request
 from app.resource import message, admin_required
 from app.db import db, SpeakerModel
 from app.services import Token
-from datetime import datetime
 from sqlalchemy import or_
 
 speaker_admin_field = {
