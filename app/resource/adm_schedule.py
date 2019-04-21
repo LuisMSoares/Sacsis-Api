@@ -16,19 +16,20 @@ schedule_field = {
     'course_id' : fields.Integer,
     'lecture_id' : fields.Integer
 }
-#parse temporario de iso8601
-dt = lambda x: datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]), int(x[14:16]), int(x[17:19]), int(x[20:26]))
+
+
 class ScheduleAdminResource(Resource):
     @admin_required
     def post(self):
+        def dt(x): return datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%f')
         formtype = request.args.get('formtype', None)
         if not formtype:
             return marshal({'message':'Tipo de formulario não econtrado!'}, message), 404
         schedule = ScheduleModel(
             local = request.json['local'],
             dia = dt(request.json['data_inicio']).weekday(),
-            data_inicio = dt(request.json['data_inicio']), #parse temporario
-            data_fim = dt(request.json['data_fim']) #parse temporario
+            data_inicio = dt(request.json['data_inicio']),
+            data_fim = dt(request.json['data_fim'])
         )
         if formtype == 'course':
             course = CourseModel.query.filter_by(id=request.json['course_id']).first()

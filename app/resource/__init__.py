@@ -54,6 +54,7 @@ from app.resource.adm_schedule import ScheduleAdminResource
 from app.resource.users import UserResource
 from app.resource.speacker import SpeakerResource
 from app.resource.schedule import ScheduleResource
+from app.resource.course_schedule import CourseScheduleResource
 
 from app.resource.login import LoginResource
 from app.resource.account import ResetPasswordResource
