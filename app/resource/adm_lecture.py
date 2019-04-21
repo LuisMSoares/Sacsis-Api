@@ -1,4 +1,3 @@
-from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, request, fields, marshal
 from app.db import db, LectureModel
 from app.resource import message, admin_required
@@ -41,7 +40,7 @@ class LectureAdminResource(Resource):
 
     @admin_required
     def get(self, lecture_id=None):
-        loadtitle = request.args.get('loadtitle', None)
+        loadtitle = int(request.args.get('loadtitle', None))
         if loadtitle:
             lectures = LectureModel.query.order_by(LectureModel.id).all()
             lectures = [marshal(l,load_title_field) for l in lectures]

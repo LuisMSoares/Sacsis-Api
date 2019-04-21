@@ -52,7 +52,7 @@ api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
 api.add_resource(SpeakerAdminResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
 api.add_resource(CourseAdminResource, '/admin/course', '/admin/course/<int:course_id>')
 api.add_resource(LectureAdminResource, '/admin/lecture', '/admin/lecture/<int:lecture_id>')
-api.add_resource(ScheduleAdminResource, '/admin/schedule', '/admin/lecture/<int:schedule_id>')
+api.add_resource(ScheduleAdminResource, '/admin/schedule', '/admin/schedule/<int:schedule_id>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(SpeakerResource, '/speaker', '/speaker/')

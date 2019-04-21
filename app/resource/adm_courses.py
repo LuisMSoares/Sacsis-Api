@@ -1,4 +1,3 @@
-from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, request, fields, marshal
 from app.db import db, CourseModel
 from app.resource import message, admin_required
@@ -14,6 +13,10 @@ remove_course_field = {
     'titulo': fields.String,
     'conteudo': fields.String,
     'ministrante_id': fields.Integer
+}
+load_title_field = {
+    'id': fields.Integer,
+    'titulo': fields.String
 }
 
 
@@ -38,6 +41,11 @@ class CourseAdminResource(Resource):
 
     @admin_required
     def get(self, course_id=None):
+        loadtitle = int(request.args.get('loadtitle', None))
+        if loadtitle:
+            courses = CourseModel.query.order_by(CourseModel.id).all()
+            courses = [marshal(l,load_title_field) for l in courses]
+            return {'values': courses}, 200
         if course_id:
             course = CourseModel.query.filter_by(id=course_id).first()
             if not course:
