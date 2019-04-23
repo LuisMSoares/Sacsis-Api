@@ -45,6 +45,13 @@ def jwt_token_required_custom(fn):
     return wrapper
 
 
+def jsonGet(json, key, default=None):
+    try:
+        return json[key]
+    except KeyError:
+        return default
+
+
 from app.resource.adm_user import UserAdminResource
 from app.resource.adm_speaker import SpeakerAdminResource
 from app.resource.adm_courses import CourseAdminResource

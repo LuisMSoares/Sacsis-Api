@@ -151,6 +151,11 @@ class ScheduleModel(db.Model):
     lecture = db.relationship('LectureModel', uselist=False)
     course = db.relationship('CourseModel', uselist=False)
 
+    subs = db.relationship('CourseSubsModel')
+
+    def vacRemaining(self):
+        return self.vagas - len(self.subs)
+
     def setCourse(self, vagas, turma, course):
         self.vagas = vagas
         self.turma = turma
@@ -162,3 +167,14 @@ class ScheduleModel(db.Model):
     def setOther(self, titulo, descricao):
         self.titulo = titulo
         self.descricao = descricao
+
+
+class CourseSubsModel(db.Model):
+    __tablename__ = 'usuarios_minicurso'
+
+    schedule_id = db.Column(db.Integer, db.ForeignKey('programacao.id')
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id')
+
+    __table_args__ = (
+        db.Index('unique_sub', schedule_id, user_id, primary_key=True, unique=True),
+    )

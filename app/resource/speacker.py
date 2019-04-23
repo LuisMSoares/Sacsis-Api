@@ -122,10 +122,11 @@ class SpeakerResource(Resource):
             speakerObj.cpf = rjson['cpf']
             speakerObj.email = rjson['email']
             speakerObj.telefone = rjson['telefone']
-            speakerObj.facebook = rjson['facebook'] or ''
-            speakerObj.twitter = rjson['twitter'] or ''
-            speakerObj.instagram = rjson['instagram'] or ''
-            speakerObj.site = rjson['site'] or ''
+            # optional values
+            speakerObj.facebook = jsonGet(rjson, 'facebook')
+            speakerObj.twitter = jsonGet(rjson, 'twitter')
+            speakerObj.instagram = jsonGet(rjson,'instagram')
+            speakerObj.site = jsonGet(rjson, 'site')
             return speakerObj
         speaker = SpeakerModel.query.filter_by(cpf=rjson['cpf']).first()
         if not speaker:
