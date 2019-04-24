@@ -23,7 +23,9 @@ course_sub_fields = {
 
 class CourseScheduleResource(Resource):
     def get(self):
-        courses = ScheduleModel.query.filter(ScheduleModel.course_id.isnot(None)).all()
+        courses = ScheduleModel.query \
+                    .order_by(ScheduleModel.id) \
+                    .filter(ScheduleModel.course_id.isnot(None)).all()
         if len(courses) == 0:
             return marshal({'message':'Nenhuma programação cadastrada foi encontrada.'}, message), 404
         format_courses = [marshal(c,course_schedule_fields) for c in courses]
