@@ -1,7 +1,6 @@
 from app import mail
 from app.services import Token
 from flask_mail import Message
-from flask_restful import url_for
 from os import environ
 
 

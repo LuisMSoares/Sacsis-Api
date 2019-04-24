@@ -1,4 +1,4 @@
-from flask_restful import Resource, request, fields, marshal
+from flask_restful import Resource, request, fields, marshal, url_for
 from app.db import db, ScheduleModel
 from app.resource import message, admin_required
 
@@ -11,7 +11,10 @@ course_schedule_field = {
 
     'vagas' : fields.Integer,
     'turma' : fields.String,
-    'minicurso' : fields.String(attribute=lambda obj: obj.course.titulo)
+    'minicurso' : fields.String(attribute=lambda obj: obj.course.titulo),
+    'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
+    'avatar': fields.String(
+        attribute=lambda obj: url_for('get_image', img_id=obj.course.speaker.id, _external=True))
 }
 lecture_schedule_field = {
     'id' : fields.Integer,
@@ -20,7 +23,10 @@ lecture_schedule_field = {
     'data_inicio' : fields.String(attribute=lambda obj: obj.data_inicio.strftime('%H:%M')),
     'data_fim' : fields.String(attribute=lambda obj: obj.data_fim.strftime('%H:%M')),
 
-    'palestra' : fields.String(attribute=lambda obj: obj.lecture.titulo)
+    'palestra' : fields.String(attribute=lambda obj: obj.lecture.titulo),
+    'ministrante': fields.String(attribute=lambda obj: obj.lecture.speaker.nome),
+    'avatar': fields.String(
+        attribute=lambda obj: url_for('get_image', img_id=obj.lecture.speaker.id, _external=True))
 }
 other_schedule_field = {
     'id' : fields.Integer,

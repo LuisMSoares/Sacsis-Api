@@ -9,6 +9,7 @@ course_schedule_fields = {
     'titulo' : fields.String(attribute=lambda o: o.course.titulo),
     'descricao' : fields.String(attribute=lambda o: o.course.conteudo),
     'ministrante' : fields.String(attribute=lambda o: o.course.speaker.nome),
+    'turma': fields.String,
     # informa o total de vagas
     'vagas' : fields.Integer,
     # informa o total de vagas ainda disponivel
