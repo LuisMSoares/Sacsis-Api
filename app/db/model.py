@@ -3,6 +3,7 @@ from passlib.apps import custom_app_context as pwd_context
 from passlib import pwd
 from datetime import datetime
 from hashlib import md5
+from sqlalchemy import or_
 
 
 class UserModel(db.Model):
@@ -151,10 +152,13 @@ class ScheduleModel(db.Model):
     lecture = db.relationship('LectureModel', uselist=False)
     course = db.relationship('CourseModel', uselist=False)
 
-    subs = db.relationship('CourseSubsModel')
 
     def vacRemaining(self):
-        return self.vagas - len(self.subs)
+        reserved = CourseSubsModel.query.filter(or_(
+            CourseSubsModel.option1 == self.course_id,
+            CourseSubsModel.option2 == self.course_id
+        )).count()
+        return self.vagas - reserved
 
     def setCourse(self, vagas, turma, course):
         self.vagas = vagas
@@ -172,9 +176,19 @@ class ScheduleModel(db.Model):
 class CourseSubsModel(db.Model):
     __tablename__ = 'usuarios_minicurso'
 
-    schedule_id = db.Column(db.Integer, db.ForeignKey('programacao.id')
-    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id')
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), primary_key=True)
+    option1 = db.Column(db.Integer, db.ForeignKey('programacao.id'))
+    option2 = db.Column(db.Integer, db.ForeignKey('programacao.id'))
 
-    __table_args__ = (
-        db.Index('unique_sub', schedule_id, user_id, primary_key=True, unique=True),
-    )
+    op1r = db.relationship('ScheduleModel', foreign_keys=[option1])
+    op2r = db.relationship('ScheduleModel', foreign_keys=[option2])
+
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.option1 = None
+        self.option2 = None
+    
+    def setOption1(self, schedule_id):
+        self.option1 = schedule_id
+    def setOption2(self, schedule_id):
+        self.option2 = schedule_id

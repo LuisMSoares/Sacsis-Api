@@ -1,6 +1,6 @@
 from flask_restful import Resource, fields, marshal, request
 from app.db import db, SpeakerModel, CourseModel, LectureModel, TokenBlacklistModel
-from app.resource import message, admin_required
+from app.resource import message, admin_required, jsonGet
 from datetime import datetime
 from app.services import Token
 import json
