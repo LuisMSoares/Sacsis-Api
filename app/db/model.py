@@ -23,7 +23,6 @@ class UserModel(db.Model):
     admin = db.Column(db.Boolean, default=False)
     senha_temporaria = db.relationship('ResetPasswordModel', uselist=False)
 
-
     def hash_password(self, senha):
         self.senha = pwd_context.encrypt(senha)
         self.senha_reset = ''
@@ -81,7 +80,6 @@ class SpeakerModel(db.Model):
     def set_avatar(self, image_file):
         self.img_nome = image_file.filename
         self.img_dados = image_file.read()
-
 
 
 class CourseModel(db.Model):
@@ -190,5 +188,30 @@ class CourseSubsModel(db.Model):
     
     def setOption1(self, schedule_id):
         self.option1 = schedule_id
+
     def setOption2(self, schedule_id):
         self.option2 = schedule_id
+
+
+class UserPaymentModel(db.Model):
+    __tablename__ = 'pagamentos'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), primary_key=True)
+    lote = db.Column(db.Integer, db.ForeignKey('lotes.id'), nullable=False)
+    valor = db.Column(db.Float, nullable=False)
+    data_pagamento = db.Column(db.DateTime, default=datetime.now())
+    admin_user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    
+    user = db.relationship('UserModel',foreign_keys=[user_id], uselist=False)
+    user_admin = db.relationship('UserModel',foreign_keys=[admin_user_id], uselist=False)
+
+
+class LotModel(db.Model):
+    __tablename__ = 'lotes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    valor = db.Column(db.Float, nullable=False)
+    data_criacao = db.Column(db.DateTime, default=datetime.now())
+    admin_user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+
+    user = db.relationship('UserModel', uselist=False)

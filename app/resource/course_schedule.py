@@ -34,27 +34,11 @@ class CourseScheduleResource(Resource):
 
     @jwt_token_required_custom
     def post(self):
-        def dupVerify(actualy, op1=None, op2=None):
-            if op1 not in actualy and op1 != None:
-                actualy[0] = op1
-            if op2 not in actualy and op2 != None:
-                actualy[1] = op2
-            if op1 not in actualy and op1 != None:
-                actualy[0] = op1
-            return actualy
-        def saveOption(course_id, flambda):
-            course = ScheduleModel.query.filter(and_(
-                ScheduleModel.course_id.isnot(None),
-                ScheduleModel.id == course_id
-            )).first()
-            if not course:
-                return 'Minicurso selecionado não encontrado.'
-            if course.vacRemaining() > 0:
-                flambda(course.id)
-                return 'Vaga reservada com sucesso!'
-            else:
-                return 'Todas as vagas foram preenchidas.'
-
+        # verifica se o usuário realizou o pagamento da inscrição.
+        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
+        if not user.status_pago:
+            return marshal({'message':'Pagamento ainda pendente!'}, message), 401
+        # continua o fluxo caso pagamento esteja ok
         user_id = get_jwt_identity()
         course_id1 = jsonGet(request.json, 'option1', default=0)
         course_id2 = jsonGet(request.json, 'option2', default=0)
@@ -64,12 +48,12 @@ class CourseScheduleResource(Resource):
             course_sub = CourseSubsModel(user_id=user_id)
         myoptions = [course_sub.option1, course_sub.option2]
         # garante que não ocorra reservas duplicadas.
-        myoptions = dupVerify(myoptions, op1=course_id1, op2=course_id2)
+        myoptions = self._dupVerify(myoptions, op1=course_id1, op2=course_id2)
 
         # realiza as reservas das vadas dos minicursos armazenando uma resposta
         response = {
-            'option1': saveOption(myoptions[0], lambda id: course_sub.setOption1(id)),
-            'option2': saveOption(myoptions[1], lambda id: course_sub.setOption1(id))
+            'option1': self._saveOption(myoptions[0], lambda id: course_sub.setOption1(id)),
+            'option2': self._saveOption(myoptions[1], lambda id: course_sub.setOption1(id))
         }
         # persiste as alterações/'novas informações' no banco de dados
         try:
@@ -83,6 +67,11 @@ class CourseScheduleResource(Resource):
     # Remove a reserva da vaga para a opção informada no json do request
     @jwt_token_required_custom
     def put(self):
+        # verifica se o usuário realizou o pagamento da inscrição.
+        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
+        if not user.status_pago:
+            return marshal({'message':'Pagamento ainda pendente!'}, message), 401
+        # continua o fluxo caso pagamento esteja ok
         user_id = get_jwt_identity()
         course_sub = CourseSubsModel.query.filter_by(user_id=user_id).first()
         if not course_sub:
@@ -97,3 +86,27 @@ class CourseScheduleResource(Resource):
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao salvar alterações.'}, message), 200
         return marshal({'message':'Alterações salvas com sucesso.'}, message), 200
+
+
+    def _dupVerify(self, actualy, op1=None, op2=None):
+        if op1 not in actualy and op1 != None:
+            actualy[0] = op1
+        if op2 not in actualy and op2 != None:
+            actualy[1] = op2
+        if op1 not in actualy and op1 != None:
+            actualy[0] = op1
+        return actualy
+
+
+    def _saveOption(self, course_id, flambda):
+        course = ScheduleModel.query.filter(and_(
+            ScheduleModel.course_id.isnot(None),
+            ScheduleModel.id == course_id
+        )).first()
+        if not course:
+            return 'Minicurso selecionado não encontrado.'
+        if course.vacRemaining() > 0:
+            flambda(course.id)
+            return 'Vaga reservada com sucesso!'
+        else:
+            return 'Todas as vagas foram preenchidas.'

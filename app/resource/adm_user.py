@@ -1,4 +1,3 @@
-from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, marshal, fields, request
 from app.db import db, UserModel
 from os import environ
@@ -62,8 +61,6 @@ class UserAdminResource(Resource):
             user.rg = request.json['rg']
         if 'matricula' in request.json:
             user.matricula = request.json['matricula']
-        if 'status_pago' in request.json:
-            user.status_pago = request.json['status_pago']
         if 'admin' in request.json:
             user.admin = request.json['admin']
         if 'camiseta' in request.json:
