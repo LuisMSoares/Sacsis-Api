@@ -38,7 +38,7 @@ class LotAdminResource(Resource):
             admin_user_id = get_jwt_identity()
         )
         try:
-            db.session.add(upayment)
+            db.session.add(lot)
             db.session.commit()
         except:
             db.session.rollback()
@@ -70,14 +70,14 @@ class LotAdminResource(Resource):
                 return marshal({'message':'Lote não encontrado.'}, message), 404
             return marshal(lot, lot_field), 200
         else:
-            lots = LotModel.query.order_by(LotModel.id).filter_by(id=lot_id).all()
-            if len(lot) == 0:
+            lots = LotModel.query.order_by(LotModel.id).all()
+            if len(lots) == 0:
                 return marshal({'message':'Nenhum lote cadastrado!'}, message), 404
-            if loadvalue:
+            if int(loadvalue) == 1:
                 return {'lotes':[marshal(lot,lot_price_field) for lot in lots]}, 200
             return marshal({
-                'quantidade': len(lot),
-                'lotes': lot
+                'quantidade': len(lots),
+                'lotes': lots
             },lot_list_fields), 200
 
 
