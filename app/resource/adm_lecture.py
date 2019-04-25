@@ -21,24 +21,6 @@ load_title_field = {
 
 class LectureAdminResource(Resource):
     @admin_required
-    def put(self):
-        lecture = LectureModel.query.filter_by(id=request.json['id']).first()
-        if not lecture:
-            return marshal({'message':'Palestra inexistente'}, message), 404
-        if 'titulo' in request.json:
-            lecture.titulo = request.json['titulo']
-        if 'conteudo' in request.json:
-            lecture.conteudo = request.json['conteudo']
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            return marshal({'message':'Erro interno'}, message), 500
-        else:
-            return marshal(lecture, lecture_field)
-
-
-    @admin_required
     def get(self, lecture_id=None):
         loadtitle = int(request.args.get('loadtitle', None))
         if loadtitle:
@@ -57,6 +39,22 @@ class LectureAdminResource(Resource):
             format_lectures = [marshal(c, lecture_field) for c in lectures]
             return {'quantidade': len(format_lectures),'palestras': format_lectures}, 200
 
+    @admin_required
+    def put(self):
+        lecture = LectureModel.query.filter_by(id=request.json['id']).first()
+        if not lecture:
+            return marshal({'message':'Palestra inexistente'}, message), 404
+        if 'titulo' in request.json:
+            lecture.titulo = request.json['titulo']
+        if 'conteudo' in request.json:
+            lecture.conteudo = request.json['conteudo']
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            return marshal({'message':'Erro interno'}, message), 500
+        else:
+            return marshal(lecture, lecture_field)
 
     @admin_required
     def delete(self, lecture_id=None):

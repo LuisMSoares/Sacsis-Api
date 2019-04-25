@@ -197,21 +197,38 @@ class UserPaymentModel(db.Model):
     __tablename__ = 'pagamentos'
 
     user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), primary_key=True)
-    lote = db.Column(db.Integer, db.ForeignKey('lotes.id'), nullable=False)
-    valor = db.Column(db.Float, nullable=False)
-    data_pagamento = db.Column(db.DateTime, default=datetime.now())
+    lote_id = db.Column(db.Integer, db.ForeignKey('lotes.id'))
+    valor = db.Column(db.Float)
+    data_pagamento = db.Column(db.DateTime, nullable=False)
+    data_modificacao = db.Column(db.DateTime, nullable=False)
     admin_user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     
     user = db.relationship('UserModel',foreign_keys=[user_id], uselist=False)
     user_admin = db.relationship('UserModel',foreign_keys=[admin_user_id], uselist=False)
 
+    def __init__(self, user_id, lote_id, valor, admin_user_id):
+        self.user_id = user_id
+        self.lote_id = lote_id
+        self.valor = valor
+        self.admin_user_id = admin_user_id
+        date = datetime.now()
+        self.data_criacao = date
+        self.data_modificacao = date
 
 class LotModel(db.Model):
     __tablename__ = 'lotes'
 
     id = db.Column(db.Integer, primary_key=True)
     valor = db.Column(db.Float, nullable=False)
-    data_criacao = db.Column(db.DateTime, default=datetime.now())
+    data_criacao = db.Column(db.DateTime, nullable=False)
+    data_modificacao = db.Column(db.DateTime, nullable=False)
     admin_user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
 
     user = db.relationship('UserModel', uselist=False)
+
+    def __init__(self, valor, admin_user_id):
+        self.valor = valor
+        self.admin_user_id = admin_user_id
+        date = datetime.now()
+        self.data_criacao = date
+        self.data_modificacao = date

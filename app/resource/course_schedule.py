@@ -31,7 +31,6 @@ class CourseScheduleResource(Resource):
         format_courses = [marshal(c,course_schedule_fields) for c in courses]
         return {'quantidade': len(format_courses),'minicursos': format_courses}, 200
 
-
     @jwt_token_required_custom
     def post(self):
         # verifica se o usuário realizou o pagamento da inscrição.
@@ -87,7 +86,6 @@ class CourseScheduleResource(Resource):
             return marshal({'message':'Ocorreu um erro ao salvar alterações.'}, message), 200
         return marshal({'message':'Alterações salvas com sucesso.'}, message), 200
 
-
     def _dupVerify(self, actualy, op1=None, op2=None):
         if op1 not in actualy and op1 != None:
             actualy[0] = op1
@@ -96,7 +94,6 @@ class CourseScheduleResource(Resource):
         if op1 not in actualy and op1 != None:
             actualy[0] = op1
         return actualy
-
 
     def _saveOption(self, course_id, flambda):
         course = ScheduleModel.query.filter(and_(

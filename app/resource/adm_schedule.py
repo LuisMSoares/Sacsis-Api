@@ -20,6 +20,19 @@ schedule_field = {
 
 class ScheduleAdminResource(Resource):
     @admin_required
+    def get(self, schedule_id=None):
+        if schedule_id:
+            schedule = ScheduleModel.query.filter_by(id=schedule_id).first()
+            if not schedule:
+                return marshal({'message':'Programação não encontrada!'}, message), 404
+            return marshal(schedule, schedule_field), 200
+        schedules = ScheduleModel.query.order_by(ScheduleModel.id).all()
+        if len(schedules) == 0:
+            return marshal({'message':'Nenhuma programação cadastrada foi encontrada.'}, message), 404
+        format_schedules = [marshal(s, schedule_field) for s in schedules]
+        return {'quantidade': len(format_schedules),'programacao': format_schedules}, 200
+
+    @admin_required
     def post(self):
         def dt(x): return datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%f')
         formtype = request.args.get('formtype', None)
@@ -60,33 +73,6 @@ class ScheduleAdminResource(Resource):
             return marshal({'message':'Ocorreu um erro ao cadastrar a programação!'}, message), 422
         else:
             return {'message':'Programação cadastrada com sucesso!'}, 201
-    
-    @admin_required
-    def delete(self, schedule_id):
-        schedule = ScheduleModel.query.filter_by(id=schedule_id).first()
-        if not schedule:
-            return marshal({'message':'Programação não encontrada!'}, message), 404
-        try:
-            db.session.delete(schedule)
-            db.session.commit()
-        except:
-            db.session.rollback()
-            return marshal({'message':'Ocorreu um erro ao excluir a programação selecionada!'}, message), 404
-        else:
-            return marshal({'message':'Programação excluida com sucesso!'}, message), 200
-
-    @admin_required
-    def get(self, schedule_id=None):
-        if schedule_id:
-            schedule = ScheduleModel.query.filter_by(id=schedule_id).first()
-            if not schedule:
-                return marshal({'message':'Programação não encontrada!'}, message), 404
-            return marshal(schedule, schedule_field), 200
-        schedules = ScheduleModel.query.order_by(ScheduleModel.id).all()
-        if len(schedules) == 0:
-            return marshal({'message':'Nenhuma programação cadastrada foi encontrada.'}, message), 404
-        format_schedules = [marshal(s, schedule_field) for s in schedules]
-        return {'quantidade': len(format_schedules),'programacao': format_schedules}, 200
 
     @admin_required
     def put(self):
@@ -129,3 +115,17 @@ class ScheduleAdminResource(Resource):
             return marshal({'message':'Ocorreu um erro ao cadastrar a programação!'}, message), 422
         else:
             return {'message':'Programação cadastrada com sucesso!'}, 20
+
+    @admin_required
+    def delete(self, schedule_id):
+        schedule = ScheduleModel.query.filter_by(id=schedule_id).first()
+        if not schedule:
+            return marshal({'message':'Programação não encontrada!'}, message), 404
+        try:
+            db.session.delete(schedule)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            return marshal({'message':'Ocorreu um erro ao excluir a programação selecionada!'}, message), 404
+        else:
+            return marshal({'message':'Programação excluida com sucesso!'}, message), 200

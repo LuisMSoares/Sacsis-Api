@@ -38,7 +38,7 @@ other_schedule_field = {
     'titulo' : fields.String,
     'descricao' : fields.String
 }
-#fields.DateTime(dt_format='iso8601')
+
 
 class ScheduleResource(Resource):
     def get(self):

@@ -41,7 +41,6 @@ class SpeakerAdminResource(Resource):
                 'ministrantes': speakers
             },speaker_admin_list_fields), 200
 
-
     @admin_required
     def put(self):
         rjson = json.loads(request.form['json_data'])
@@ -77,7 +76,6 @@ class SpeakerAdminResource(Resource):
             return marshal({'message':'Erro interno'}, message), 500
         else:
             return marshal(speaker, speaker_admin_field), 201
-
 
     @admin_required
     def delete(self, speaker_id=None):

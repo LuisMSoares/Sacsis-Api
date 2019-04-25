@@ -47,7 +47,6 @@ class UserAdminResource(Resource):
             except:
                 return marshal({'message':'Erro interno'}, message), 500
 
-
     @admin_required
     def put(self):
         user = UserModel.query.filter_by(id=request.json['id']).first()
@@ -72,7 +71,6 @@ class UserAdminResource(Resource):
             return marshal({'message':'Erro interno'}, message), 500
         else:
             return marshal(user, user_admin_field)
-
 
     @admin_required
     def delete(self, user_id=None):
