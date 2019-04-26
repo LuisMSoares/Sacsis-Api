@@ -10,7 +10,8 @@ from app.db import db, UserModel
 
 app = Flask(__name__)
 
-
+# Handling excetions
+app.config['PROPAGATE_EXCEPTIONS'] = True
 # ORM Configuration
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
