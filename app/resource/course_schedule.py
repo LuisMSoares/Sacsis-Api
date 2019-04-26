@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, fields, marshal, request
 from app.db import db, ScheduleModel, UserModel, CourseSubsModel
 from app.resource import jwt_token_required_custom, jsonGet, message
-from sqlalchemy import or_, and_
+from sqlalchemy import and_
 
 course_schedule_fields = {
     'id' : fields.Integer,

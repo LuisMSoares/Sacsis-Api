@@ -1,6 +1,5 @@
 from flask_restful import Resource, request, fields, marshal, url_for
 from app.db import db, ScheduleModel
-from app.resource import message, admin_required
 
 course_schedule_field = {
     'id' : fields.Integer,

@@ -2,7 +2,6 @@ from app.db import db
 from passlib.apps import custom_app_context as pwd_context
 from passlib import pwd
 from datetime import datetime
-from hashlib import md5
 from sqlalchemy import or_
 
 
@@ -41,7 +40,6 @@ class ResetPasswordModel(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), unique=True)
     senha = db.Column(db.String, nullable=False)
 
-
     def generate_password(self):
         temp_pass = pwd.genword(entropy=64)
         self.senha = pwd_context.encrypt(temp_pass)
@@ -69,7 +67,6 @@ class SpeakerModel(db.Model):
     twitter = db.Column(db.String(50), default=None)
     instagram = db.Column(db.String(50), default=None)
     site = db.Column(db.String(50), default=None)
-
 
     lecture = db.relationship('LectureModel', passive_deletes=True)
     course = db.relationship('CourseModel', passive_deletes=True)
@@ -121,14 +118,6 @@ class TokenBlacklistModel(db.Model):
     token = db.Column(db.String, nullable=False)
 
 
-class ImagesModel(db.Model):
-    __tablename__ = 'imagens'
-
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String, nullable=False)
-    dados = db.Column(db.LargeBinary, nullable=False)
-
-
 class ScheduleModel(db.Model):
     __tablename__ = 'programacao'
 
@@ -149,7 +138,6 @@ class ScheduleModel(db.Model):
 
     lecture = db.relationship('LectureModel', uselist=False)
     course = db.relationship('CourseModel', uselist=False)
-
 
     def vacRemaining(self):
         reserved = CourseSubsModel.query.filter(or_(
@@ -214,6 +202,7 @@ class UserPaymentModel(db.Model):
         date = datetime.now()
         self.data_criacao = date
         self.data_modificacao = date
+
 
 class LotModel(db.Model):
     __tablename__ = 'lotes'

@@ -1,7 +1,7 @@
 from flask_restful import Resource, marshal, fields, request
 from app.db import db, UserModel
-from os import environ
 from app.resource import message, admin_required
+from os import environ
 
 user_admin_field = {
     'id': fields.Integer,

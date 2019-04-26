@@ -1,9 +1,9 @@
 from flask_restful import Resource, fields, marshal, request
 from app.db import db, SpeakerModel, CourseModel, LectureModel, TokenBlacklistModel
 from app.resource import message, admin_required, jsonGet
-from datetime import datetime
 from app.services import Token
-import json
+from datetime import datetime
+from json import loads
 
 token_field = {
     'route_type' : fields.String,
@@ -42,7 +42,7 @@ class SpeakerResource(Resource):
             return marshal(token_data, message), 401
         if int(datetime.now().timestamp()) > token_data['expiration']:
             return marshal({'message':'Token informado expirado!'}, message), 401
-        rjson, avatar = json.loads(request.form['json_data']), request.files['avatar']
+        rjson, avatar = loads(request.form['json_data']), request.files['avatar']
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)
         elif token_data['route_type'] == 'course' == rjson['type_form']:

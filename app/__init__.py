@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_mail import Mail
-from app.db import db, UserModel
+from app.db import db
 
 
 app = Flask(__name__)
@@ -42,7 +42,6 @@ api.prefix = '/api'
 # Custom routes from application
 from app.services.custom_routes import *
 
-
 # Resources app registration
 from app.resource import (UserResource, LoginResource, UserAdminResource,
 SpeakerResource, ResetPasswordResource, SpeakerAdminResource, ScheduleResource,
@@ -65,6 +64,5 @@ api.add_resource(CourseScheduleResource, '/schedule/course')
 api.add_resource(LoginResource, '/login')
 api.add_resource(ResetPasswordResource, '/reset_password')
 
-
-# Drop database and master administrator registration
+# Drop database (dev. env. only) and master administrator registration
 from app.services.adm_master import *

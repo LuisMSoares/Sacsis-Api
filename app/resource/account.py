@@ -1,4 +1,4 @@
-from flask_jwt_extended import ( create_access_token, get_jwt_identity )
+from flask_jwt_extended import get_jwt_identity
 from app.resource import message, jwt_token_required_custom
 from flask_restful import Resource, request, marshal, fields
 from flask import current_app

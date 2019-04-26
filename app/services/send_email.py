@@ -1,7 +1,6 @@
 from app import mail
 from app.services import Token
 from flask_mail import Message
-from os import environ
 
 
 class SendEmail:
