@@ -64,7 +64,7 @@ class UserResource(Resource):
         if 'matricula' in request.json:
             user.matricula = request.json['matricula']
         if 'camiseta' in request.json:
-            user.matricula = request.json['camiseta']
+            user.camiseta = request.json['camiseta']
         try:
             db.session.commit()
         except:
