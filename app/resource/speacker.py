@@ -1,9 +1,9 @@
 from flask_restful import Resource, fields, marshal, request
 from app.db import db, SpeakerModel, CourseModel, LectureModel, TokenBlacklistModel
 from app.resource import message, admin_required, jsonGet
-from datetime import datetime
 from app.services import Token
-import json
+from datetime import datetime
+from json import loads
 
 token_field = {
     'route_type' : fields.String,
@@ -29,7 +29,6 @@ class SpeakerResource(Resource):
         response = {'route_type':route_type, 'expiration_days':expiration_days, 'token':token}
         return marshal(response, token_field), 201
 
-
     def post(self):
         token = request.args.get('token', None)
         # verifica a validade do token
@@ -43,14 +42,13 @@ class SpeakerResource(Resource):
             return marshal(token_data, message), 401
         if int(datetime.now().timestamp()) > token_data['expiration']:
             return marshal({'message':'Token informado expirado!'}, message), 401
-        rjson, avatar = json.loads(request.form['json_data']), request.files['avatar']
+        rjson, avatar = loads(request.form['json_data']), request.files['avatar']
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)
         elif token_data['route_type'] == 'course' == rjson['type_form']:
             return self.CourseReg(rjson, avatar, token)
         return marshal({'message':'Token invalido para este tipo de formulario!'}, message), 401
 
-    
     def CourseReg(self, rjson, avatar, token=None):
         # Cadastro de ministrante
         speaker = self.SpeakerReg(rjson, avatar)
@@ -76,7 +74,6 @@ class SpeakerResource(Resource):
         self.TokenBlacklist(token=token)
         return marshal({'message':'Minicurso cadastrado com sucesso.'}, message), 201
 
-
     def LectureReg(self, rjson, avatar, token=None):
         # Cadastro de ministrante
         speaker = self.SpeakerReg(rjson, avatar)
@@ -101,18 +98,6 @@ class SpeakerResource(Resource):
             return marshal({'message':'Ocorreu um erro ao cadastrar a palestra!'}, message), 422
         self.TokenBlacklist(token=token)
         return marshal({'message':'Palestra cadastrada com sucesso.'}, message), 201
-
-
-    def limit_time(self, x):
-        return 1 if x<=0 else 7 if x>7 else x
-        
-    def TokenBlacklist(self, token):
-        blacklist = TokenBlacklistModel(token=token)
-        try:
-            db.session.add(blacklist)
-            db.session.commit()
-        except:
-            db.session.rollback()
 
     def SpeakerReg(self, rjson, avatar):
         def set_speaker_data(rjson, speakerObj=SpeakerModel()):
@@ -143,3 +128,14 @@ class SpeakerResource(Resource):
         except:
             db.session.rollback()
             return (False,)
+            
+    def limit_time(self, x):
+        return 1 if x<=0 else 7 if x>7 else x
+        
+    def TokenBlacklist(self, token):
+        blacklist = TokenBlacklistModel(token=token)
+        try:
+            db.session.add(blacklist)
+            db.session.commit()
+        except:
+            db.session.rollback()

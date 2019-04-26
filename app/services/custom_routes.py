@@ -1,4 +1,4 @@
-from flask import jsonify, request, send_file
+from flask import jsonify, send_file
 from io import BytesIO
 from app.db import db, UserModel, SpeakerModel
 from app.services import Token
@@ -8,7 +8,6 @@ from app import app
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({'message': 'Route not found'}), 404
-
 
 @app.route('/activate/<token>')
 def activate_account(token):
@@ -25,7 +24,6 @@ def activate_account(token):
             return f'<h1> {msg_mail} </h1>'
     except:
         return '<h1> Ocorreu um erro ao confirmar sua conta! </h1>'
-
 
 @app.route('/speaker/images/<int:img_id>')
 def get_image(img_id=None):

@@ -1,8 +1,7 @@
-from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, marshal, fields, request
 from app.db import db, UserModel
-from os import environ
 from app.resource import message, admin_required
+from os import environ
 
 user_admin_field = {
     'id': fields.Integer,
@@ -48,7 +47,6 @@ class UserAdminResource(Resource):
             except:
                 return marshal({'message':'Erro interno'}, message), 500
 
-
     @admin_required
     def put(self):
         user = UserModel.query.filter_by(id=request.json['id']).first()
@@ -62,8 +60,6 @@ class UserAdminResource(Resource):
             user.rg = request.json['rg']
         if 'matricula' in request.json:
             user.matricula = request.json['matricula']
-        if 'status_pago' in request.json:
-            user.status_pago = request.json['status_pago']
         if 'admin' in request.json:
             user.admin = request.json['admin']
         if 'camiseta' in request.json:
@@ -75,7 +71,6 @@ class UserAdminResource(Resource):
             return marshal({'message':'Erro interno'}, message), 500
         else:
             return marshal(user, user_admin_field)
-
 
     @admin_required
     def delete(self, user_id=None):

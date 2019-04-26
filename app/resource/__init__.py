@@ -31,7 +31,6 @@ def admin_required(fn):
             return marshal({'message':'Acesso restrito!'}, message), 403
     return wrapper
 
-
 def jwt_token_required_custom(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
@@ -43,7 +42,6 @@ def jwt_token_required_custom(fn):
             return marshal({'message':'Token de autenticação não encontrado!'}, message), 422
         return fn(*args, **kwargs)
     return wrapper
-
 
 def jsonGet(json, key, default=None):
     try:
@@ -57,6 +55,7 @@ from app.resource.adm_speaker import SpeakerAdminResource
 from app.resource.adm_courses import CourseAdminResource
 from app.resource.adm_lecture import LectureAdminResource
 from app.resource.adm_schedule import ScheduleAdminResource
+from app.resource.adm_payment import PaymentAdminResource, LotAdminResource
 
 from app.resource.users import UserResource
 from app.resource.speacker import SpeakerResource

@@ -1,6 +1,5 @@
 from flask_restful import Resource, request, fields, marshal, url_for
 from app.db import db, ScheduleModel
-from app.resource import message, admin_required
 
 course_schedule_field = {
     'id' : fields.Integer,
@@ -38,7 +37,7 @@ other_schedule_field = {
     'titulo' : fields.String,
     'descricao' : fields.String
 }
-#fields.DateTime(dt_format='iso8601')
+
 
 class ScheduleResource(Resource):
     def get(self):

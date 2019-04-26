@@ -19,6 +19,13 @@ user_field = {
 
 
 class UserResource(Resource):
+    @jwt_token_required_custom
+    def get(self):
+        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
+        if not user:
+            return marshal({'message':'Usuário não encontrado'}, message), 404
+        return marshal(user, user_field)
+        
     def post(self):
         user = UserModel(
             nome=request.json['nome'],
@@ -43,7 +50,6 @@ class UserResource(Resource):
             ]).start()
             return marshal({'message':'Usuário cadastrado'}, message), 201
 
-
     @jwt_token_required_custom
     def put(self):
         user = UserModel.query.filter_by(id=get_jwt_identity()).first()
@@ -66,11 +72,3 @@ class UserResource(Resource):
             return marshal({'message':'Erro interno'}, message), 500
         else:
             return marshal(user, user_field)
-
-
-    @jwt_token_required_custom
-    def get(self):
-        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
-        if not user:
-            return marshal({'message':'Usuário não encontrado'}, message), 404
-        return marshal(user, user_field)

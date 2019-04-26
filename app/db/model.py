@@ -2,7 +2,6 @@ from app.db import db
 from passlib.apps import custom_app_context as pwd_context
 from passlib import pwd
 from datetime import datetime
-from hashlib import md5
 from sqlalchemy import or_
 
 
@@ -23,7 +22,6 @@ class UserModel(db.Model):
     admin = db.Column(db.Boolean, default=False)
     senha_temporaria = db.relationship('ResetPasswordModel', uselist=False)
 
-
     def hash_password(self, senha):
         self.senha = pwd_context.encrypt(senha)
         self.senha_reset = ''
@@ -41,7 +39,6 @@ class ResetPasswordModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), unique=True)
     senha = db.Column(db.String, nullable=False)
-
 
     def generate_password(self):
         temp_pass = pwd.genword(entropy=64)
@@ -71,7 +68,6 @@ class SpeakerModel(db.Model):
     instagram = db.Column(db.String(50), default=None)
     site = db.Column(db.String(50), default=None)
 
-
     lecture = db.relationship('LectureModel', passive_deletes=True)
     course = db.relationship('CourseModel', passive_deletes=True)
 
@@ -81,7 +77,6 @@ class SpeakerModel(db.Model):
     def set_avatar(self, image_file):
         self.img_nome = image_file.filename
         self.img_dados = image_file.read()
-
 
 
 class CourseModel(db.Model):
@@ -123,14 +118,6 @@ class TokenBlacklistModel(db.Model):
     token = db.Column(db.String, nullable=False)
 
 
-class ImagesModel(db.Model):
-    __tablename__ = 'imagens'
-
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String, nullable=False)
-    dados = db.Column(db.LargeBinary, nullable=False)
-
-
 class ScheduleModel(db.Model):
     __tablename__ = 'programacao'
 
@@ -151,7 +138,6 @@ class ScheduleModel(db.Model):
 
     lecture = db.relationship('LectureModel', uselist=False)
     course = db.relationship('CourseModel', uselist=False)
-
 
     def vacRemaining(self):
         reserved = CourseSubsModel.query.filter(or_(
@@ -190,5 +176,48 @@ class CourseSubsModel(db.Model):
     
     def setOption1(self, schedule_id):
         self.option1 = schedule_id
+
     def setOption2(self, schedule_id):
         self.option2 = schedule_id
+
+
+class UserPaymentModel(db.Model):
+    __tablename__ = 'pagamentos'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), primary_key=True)
+    lote_id = db.Column(db.Integer, db.ForeignKey('lotes.id'))
+    valor = db.Column(db.Float)
+    data_pagamento = db.Column(db.DateTime, nullable=False)
+    data_modificacao = db.Column(db.DateTime, nullable=False)
+    admin_user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    
+    user = db.relationship('UserModel',foreign_keys=[user_id], uselist=False)
+    user_admin = db.relationship('UserModel',foreign_keys=[admin_user_id], uselist=False)
+
+    def __init__(self, user_id, lote_id, valor, admin_user_id):
+        self.user_id = user_id
+        self.lote_id = lote_id
+        self.valor = valor
+        self.admin_user_id = admin_user_id
+        date = datetime.now()
+        self.data_criacao = date
+        self.data_modificacao = date
+
+
+class LotModel(db.Model):
+    __tablename__ = 'lotes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    valor = db.Column(db.Float, nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False)
+    data_modificacao = db.Column(db.DateTime, nullable=False)
+    admin_user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+
+    user = db.relationship('UserModel', uselist=False)
+
+    def __init__(self, valor, admin_user_id):
+        self.valor = valor
+        self.admin_user_id = admin_user_id
+        date = datetime.now()
+        self.data_criacao = date
+        self.data_modificacao = date

@@ -22,24 +22,6 @@ load_title_field = {
 
 class CourseAdminResource(Resource):
     @admin_required
-    def put(self):
-        course = CourseModel.query.filter_by(id=request.json['id']).first()
-        if not course:
-            return marshal({'message':'Minicurso inexistente'}, message), 404
-        if 'titulo' in request.json:
-            course.titulo = request.json['titulo']
-        if 'conteudo' in request.json:
-            course.conteudo = request.json['conteudo']
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            return marshal({'message':'Erro interno'}, message), 500
-        else:
-            return marshal(course, course_field)
-
-
-    @admin_required
     def get(self, course_id=None):
         loadtitle = int(request.args.get('loadtitle', None))
         if loadtitle:
@@ -58,6 +40,22 @@ class CourseAdminResource(Resource):
             format_courses = [marshal(c, course_field) for c in courses]
             return {'quantidade': len(format_courses),'minicursos': format_courses}, 200
 
+    @admin_required
+    def put(self):
+        course = CourseModel.query.filter_by(id=request.json['id']).first()
+        if not course:
+            return marshal({'message':'Minicurso inexistente'}, message), 404
+        if 'titulo' in request.json:
+            course.titulo = request.json['titulo']
+        if 'conteudo' in request.json:
+            course.conteudo = request.json['conteudo']
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            return marshal({'message':'Erro interno'}, message), 500
+        else:
+            return marshal(course, course_field)
 
     @admin_required
     def delete(self, course_id=None):
