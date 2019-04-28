@@ -22,6 +22,7 @@ course_sub_fields = {
 
 
 class CourseScheduleResource(Resource):
+    @jwt_token_required_custom
     def get(self):
         courses = ScheduleModel.query \
                     .order_by(ScheduleModel.id) \
@@ -29,7 +30,12 @@ class CourseScheduleResource(Resource):
         if len(courses) == 0:
             return marshal({'message':'Nenhuma programação cadastrada foi encontrada.'}, message), 404
         format_courses = [marshal(c,course_schedule_fields) for c in courses]
-        return {'quantidade': len(format_courses),'minicursos': format_courses}, 200
+        csm = CourseSubsModel.query.filter_by(user_id=get_jwt_identity()).first()
+        op1, op2 = (csm.option1, csm.option2) if csm else (None, None)
+        return {'quantidade': len(format_courses),
+                'minicursos': format_courses,
+                'option1': op1,
+                'option2': op2}, 200
 
     @jwt_token_required_custom
     def post(self):
@@ -52,7 +58,7 @@ class CourseScheduleResource(Resource):
         # realiza as reservas das vadas dos minicursos armazenando uma resposta
         response = {
             'option1': self._saveOption(myoptions[0], lambda id: course_sub.setOption1(id)),
-            'option2': self._saveOption(myoptions[1], lambda id: course_sub.setOption1(id))
+            'option2': self._saveOption(myoptions[1], lambda id: course_sub.setOption2(id))
         }
         # persiste as alterações/'novas informações' no banco de dados
         try:

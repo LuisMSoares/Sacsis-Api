@@ -200,7 +200,7 @@ class UserPaymentModel(db.Model):
         self.valor = valor
         self.admin_user_id = admin_user_id
         date = datetime.now()
-        self.data_criacao = date
+        self.data_pagamento = date
         self.data_modificacao = date
 
 
