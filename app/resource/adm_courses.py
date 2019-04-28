@@ -23,7 +23,8 @@ load_title_field = {
 class CourseAdminResource(Resource):
     @admin_required
     def get(self, course_id=None):
-        loadtitle = int(request.args.get('loadtitle', None))
+        loadtitle = request.args.get('loadtitle', None)
+        if loadtitle: loadtitle = int(loadtitle)
         if loadtitle:
             courses = CourseModel.query.order_by(CourseModel.id).all()
             courses = [marshal(l,load_title_field) for l in courses]
