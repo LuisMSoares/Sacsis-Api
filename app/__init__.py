@@ -28,6 +28,8 @@ app.config['MAIL_USE_TLS'] = environ.get('MAIL_USE_TLS',False)
 app.config['MAIL_USE_SSL'] = environ.get('MAIL_USE_SSL',True)
 
 
+# Cross Origin Resource Sharing
+CORS(app)
 # Database init
 db.init_app(app)
 # JWT init
@@ -37,9 +39,6 @@ mail = Mail(app)
 # Api init
 api = Api(app)
 api.prefix = '/api'
-# Cross Origin Resource Sharing
-CORS(app)
-CORS(api)
 
 
 # Custom routes from application
