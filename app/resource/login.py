@@ -1,7 +1,7 @@
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity
 from flask_restful import Resource, request, marshal, fields
 from app.db import UserModel
-from app.resource import message
+from app.resource import message, jwt_token_required_custom
 
 user_field = {
     'id': fields.Integer,
@@ -41,3 +41,13 @@ class LoginResource(Resource):
         if reset_user:
             data['rsenha'] = True
         return data, 200
+
+    #token refresh
+    @jwt_token_required_custom
+    def put(self):
+        user_id = get_jwt_identity()
+        jwt_token = create_access_token(identity=user_id)
+        data = {'jwt_token':jwt_token}
+        return data, 200
+
+

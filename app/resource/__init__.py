@@ -18,10 +18,10 @@ def admin_required(fn):
     def wrapper(*args, **kwargs):
         try:
             verify_jwt_in_request()
-        except InvalidHeaderError:
-            return marshal({'message':'Token de autenticação invalido!'}, message), 422
         except NoAuthorizationError:
-            return marshal({'message':'Token de autenticação não encontrado!'}, message), 422
+            return marshal({'message':'Token de autenticação não encontrado!'}, message), 404
+        except Exception:
+            return marshal({'message':'Token de autenticação invalido ou expirado!'}, message), 403
         user = UserModel.query.filter_by(id=get_jwt_identity()).first()
         if not user:
             return marshal({'message':'Acesso restrito!'}, message), 403
@@ -36,10 +36,10 @@ def jwt_token_required_custom(fn):
     def wrapper(*args, **kwargs):
         try:
             verify_jwt_in_request()
-        except InvalidHeaderError:
-            return marshal({'message':'Token de autenticação invalido!'}, message), 422
         except NoAuthorizationError:
-            return marshal({'message':'Token de autenticação não encontrado!'}, message), 422
+            return marshal({'message':'Token de autenticação não encontrado!'}, message), 404
+        except Exception:
+            return marshal({'message':'Token de autenticação invalido ou expirado!'}, message), 403
         return fn(*args, **kwargs)
     return wrapper
 

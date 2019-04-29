@@ -1,4 +1,5 @@
 from os import environ
+from datetime import timedelta
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -17,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 # JSON Web Token Configuration
 app.config['JWT_SECRET_KEY'] = environ.get('JWT_KEY','This is a secret key')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=environ.get('JWT_EXPIRES_MINUTES', 25))
 # Email Server Configuration
 app.config['MAIL_SERVER']=environ.get('MAIL_SERVER','smtp.gmail.com')
 app.config['MAIL_PORT'] = environ.get('MAIL_PORT',465)
