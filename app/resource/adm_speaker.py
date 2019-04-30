@@ -14,7 +14,7 @@ speaker_admin_field = {
     'instagram' : fields.String,
     'email' : fields.String,
     'telefone' : fields.String,
-    'site' : fields.String
+    'site' : fields.String,
     'ocupacao': fields.String(attribute=lambda obj.occupation())
 }
 speaker_admin_list_fields = {
