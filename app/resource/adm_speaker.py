@@ -15,7 +15,7 @@ speaker_admin_field = {
     'email' : fields.String,
     'telefone' : fields.String,
     'site' : fields.String,
-    'ocupacao': fields.String(attribute=lambda obj: obj.occupation())
+    'ocupacao' : fields.String(attribute=lambda x: x.occupation())
 }
 speaker_admin_list_fields = {
     'quantidade': fields.Integer,
@@ -36,10 +36,10 @@ class SpeakerAdminResource(Resource):
             speakers = [marshal(t, speaker_admin_field) for t in qspeakers]
             if len(speakers) == 0:
                 return marshal({'message':'Nenhum ministrante encontrado!'}, message), 404
-            return marshal({
+            return {
                 'quantidade': len(speakers),
                 'ministrantes': speakers
-            },speaker_admin_list_fields), 200
+            }, 200
 
     @admin_required
     def put(self):

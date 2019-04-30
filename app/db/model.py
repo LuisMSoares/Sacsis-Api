@@ -80,7 +80,6 @@ class SpeakerModel(db.Model):
             return 'Palestra'
         return '-'
 
-
     def set_created_data(self):
         self.criado_em = datetime.now()
 
