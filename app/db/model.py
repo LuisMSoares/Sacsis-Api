@@ -71,6 +71,16 @@ class SpeakerModel(db.Model):
     lecture = db.relationship('LectureModel', passive_deletes=True)
     course = db.relationship('CourseModel', passive_deletes=True)
 
+    def occupation(self):
+        if len(self.lecture) != 0 and len(self.course) !=0:
+            return 'Minicurso & Palestra'
+        elif len(self.course) != 0:
+            return 'Minicurso'
+        elif len(self.lecture) !=0:
+            return 'Palestra'
+        return '-'
+
+
     def set_created_data(self):
         self.criado_em = datetime.now()
 
