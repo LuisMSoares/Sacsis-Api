@@ -46,8 +46,11 @@ class LoginResource(Resource):
     @jwt_token_required_custom
     def put(self):
         user_id = get_jwt_identity()
+        user = UserModel.query.filter_by(id=user_id).first()
+        if not user:
+            return marshal({'message':'O usuario para este token não existe'}, message), 404
         jwt_token = create_access_token(identity=user_id)
-        data = {'jwt_token':jwt_token}
+        data = {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}
         return data, 200
 
 
