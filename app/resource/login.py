@@ -51,6 +51,8 @@ class LoginResource(Resource):
             return marshal({'message':'O usuario para este token não existe'}, message), 404
         jwt_token = create_access_token(identity=user_id)
         data = {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}
+        if user.admin:
+            data['admin'] = True
         return data, 200
 
 
