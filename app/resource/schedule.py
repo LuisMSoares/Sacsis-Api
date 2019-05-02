@@ -1,4 +1,5 @@
 from flask_restful import Resource, request, fields, marshal, url_for
+from app.resource import message
 from app.db import db, ScheduleModel
 
 course_schedule_field = {
@@ -54,4 +55,6 @@ class ScheduleResource(Resource):
                     values[str(i)].append(marshal(schedule, lecture_schedule_field))
                 if not schedule.course_id and not schedule.lecture_id:
                     values[str(i)].append(marshal(schedule, other_schedule_field))
+        if not values:
+            return marshal({'message':'Nenhuma programação encontrada.'}, message), 404
         return values, 200
