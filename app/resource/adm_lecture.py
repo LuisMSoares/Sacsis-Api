@@ -22,8 +22,8 @@ load_title_field = {
 class LectureAdminResource(Resource):
     @admin_required
     def get(self, lecture_id=None):
-        loadtitle = int(request.args.get('loadtitle', None))
-        if loadtitle:
+        loadtitle = int(request.args.get('loadtitle', 0))
+        if loadtitle == '1':
             lectures = LectureModel.query.order_by(LectureModel.id).all()
             lectures = [marshal(l,load_title_field) for l in lectures]
             return {'values': lectures}, 200

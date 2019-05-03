@@ -36,7 +36,7 @@ payment_list_fields = {
 class LotAdminResource(Resource):
     @admin_required
     def get(self, lot_id=None):
-        loadvalue = request.args.get('loadvalue', None)
+        loadvalue = request.args.get('loadvalue', 0)
         if lot_id:
             lot = LotModel.query.filter_by(id=lot_id).first()
             if not lot:
@@ -46,7 +46,7 @@ class LotAdminResource(Resource):
             lots = LotModel.query.order_by(LotModel.id).all()
             if len(lots) == 0:
                 return marshal({'message':'Nenhum lote cadastrado!'}, message), 404
-            if int(loadvalue) == 1:
+            if loadvalue == '1':
                 return {'lotes':[marshal(lot,lot_price_field) for lot in lots]}, 200
             return marshal({
                 'quantidade': len(lots),
