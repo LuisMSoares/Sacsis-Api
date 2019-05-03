@@ -32,7 +32,7 @@ class UserAdminResource(Resource):
         else:
             adm_filter = request.args.get('onlyadm', 0)
             loadname = request.args.get('loadname', 0)
-            if adm_filter == '1':
+            if int(adm_filter) == 1:
                 user = UserModel.query.filter_by(admin=adm_filter).order_by(UserModel.id).all()
             else:
                 user = UserModel.query.order_by(UserModel.id).all()
@@ -40,7 +40,7 @@ class UserAdminResource(Resource):
             users = [marshal(u, user_admin_field) for u in user if u.email != admin_login]
             if len(users) == 0:
                 return marshal({'message':'Nenhum usuário encontrado'}, message), 404
-            if loadname == '1':
+            if int(loadname) == 1:
                 return marshal(users, user_onlyname_field), 200
             else:
                 return {

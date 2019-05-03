@@ -24,7 +24,7 @@ class CourseAdminResource(Resource):
     @admin_required
     def get(self, course_id=None):
         loadtitle = request.args.get('loadtitle', 0)
-        if loadtitle == '1':
+        if int(loadtitle) == 1:
             courses = CourseModel.query.order_by(CourseModel.id).all()
             courses = [marshal(l,load_title_field) for l in courses]
             return {'values': courses}, 200

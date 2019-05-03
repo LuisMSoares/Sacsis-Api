@@ -46,7 +46,7 @@ class LotAdminResource(Resource):
             lots = LotModel.query.order_by(LotModel.id).all()
             if len(lots) == 0:
                 return marshal({'message':'Nenhum lote cadastrado!'}, message), 404
-            if loadvalue == '1':
+            if int(loadvalue) == 1:
                 return {'lotes':[marshal(lot,lot_price_field) for lot in lots]}, 200
             return marshal({
                 'quantidade': len(lots),
