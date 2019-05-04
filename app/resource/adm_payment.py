@@ -138,7 +138,7 @@ class PaymentAdminResource(Resource):
         return marshal(upayment, payment_field), 200
 
     @admin_required
-    def delete(self):
+    def delete(self, user_id=0):
         upayment = UserPaymentModel.query.filter_by(user_id=user_id).first()
         if not upayment:
             return marshal({'message':'Pagamento de usuário não encontrado.'}, message), 404

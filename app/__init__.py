@@ -57,7 +57,7 @@ api.add_resource(CourseAdminResource, '/admin/course', '/admin/course/<int:cours
 api.add_resource(LectureAdminResource, '/admin/lecture', '/admin/lecture/<int:lecture_id>')
 api.add_resource(ScheduleAdminResource, '/admin/schedule', '/admin/schedule/<int:schedule_id>')
 api.add_resource(LotAdminResource, '/admin/payment/lot', '/admin/payment/lot/<int:lot_id>')
-api.add_resource(PaymentAdminResource, '/admin/payment')
+api.add_resource(PaymentAdminResource, '/admin/payment', '/admin/payment/<int:user_id>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(SpeakerResource, '/speaker', '/speaker/')
