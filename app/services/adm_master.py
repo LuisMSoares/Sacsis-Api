@@ -4,14 +4,6 @@ from app import app
 
 
 with app.app_context():
-    try:
-        # remove this in production
-        #db.drop_all()
-        #print(' * Drop all tables!')
-
-        db.create_all()
-    except:
-        ...
     #Master Administrator Registration
     user = UserModel.query.filter_by(nome='Administrador Mestre').first()
     if not user:

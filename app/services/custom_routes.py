@@ -10,7 +10,7 @@ def not_found(error):
     return jsonify({'message': 'Route not found'}), 404
 
 @app.route('/activate/<token>')
-def activate_account(token):
+def activate_account(token=None):
     try:
         if not token:
             return '<h1> Token de validação não encontrado! </h1>'

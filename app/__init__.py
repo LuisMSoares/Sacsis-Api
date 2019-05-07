@@ -40,7 +40,9 @@ mail = Mail(app)
 # Api init
 api = Api(app)
 api.prefix = '/api'
-
+# Admin api init
+adm_api = Api(app)
+adm_api.prefix = '/api/admin'
 
 # Custom routes from application
 from app.services.custom_routes import *
@@ -51,13 +53,13 @@ SpeakerResource, ResetPasswordResource, SpeakerAdminResource, ScheduleResource,
 CourseAdminResource, LectureAdminResource, ScheduleAdminResource, CourseScheduleResource,
 LotAdminResource, PaymentAdminResource)
 
-api.add_resource(UserAdminResource, '/admin/user', '/admin/user/<int:user_id>')
-api.add_resource(SpeakerAdminResource, '/admin/speaker', '/admin/speaker/<int:speaker_id>')
-api.add_resource(CourseAdminResource, '/admin/course', '/admin/course/<int:course_id>')
-api.add_resource(LectureAdminResource, '/admin/lecture', '/admin/lecture/<int:lecture_id>')
-api.add_resource(ScheduleAdminResource, '/admin/schedule', '/admin/schedule/<int:schedule_id>')
-api.add_resource(LotAdminResource, '/admin/payment/lot', '/admin/payment/lot/<int:lot_id>')
-api.add_resource(PaymentAdminResource, '/admin/payment', '/admin/payment/<int:user_id>')
+adm_api.add_resource(UserAdminResource, '/user', '/user/<int:user_id>')
+adm_api.add_resource(SpeakerAdminResource, '/speaker', '/speaker/<int:speaker_id>')
+adm_api.add_resource(CourseAdminResource, '/course', '/course/<int:course_id>')
+adm_api.add_resource(LectureAdminResource, '/lecture', '/lecture/<int:lecture_id>')
+adm_api.add_resource(ScheduleAdminResource, '/schedule', '/schedule/<int:schedule_id>')
+adm_api.add_resource(LotAdminResource, '/payment/lot', '/payment/lot/<int:lot_id>')
+adm_api.add_resource(PaymentAdminResource, '/payment', '/payment/<int:user_id>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(SpeakerResource, '/speaker', '/speaker/')
@@ -67,5 +69,16 @@ api.add_resource(CourseScheduleResource, '/schedule/course')
 api.add_resource(LoginResource, '/login')
 api.add_resource(ResetPasswordResource, '/reset_password')
 
-# Drop database (dev. env. only) and master administrator registration
+# Master administrator registration
 from app.services.adm_master import *
+
+# Database init tables
+with app.app_context():
+    try:
+        # remove this in production
+        # db.drop_all()
+        # print(' * Drop all tables!')
+
+        db.create_all()
+    except:
+        ...

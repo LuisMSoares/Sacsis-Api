@@ -9,9 +9,7 @@ class SendEmail:
             try:
                 msg = Message(title, recipients=[email])
                 link = link.replace('token', Token.generate(email))
-                msg.body = f'''Clique no link abaixo para confirmar seu cadastro
-                {link}
-                '''
+                msg.html = f'Clique <a href="{link}">aqui</a> para confirmar seu cadastro.'
                 mail.send(msg)
             except:
                 ...
@@ -20,12 +18,7 @@ class SendEmail:
         with app.app_context():
             try:
                 msg = Message(title, recipients=[email])
-                msg.body = f'''
-                Utilize o token abaixo para logar no sistema.
-                Token de acesso: {password}
-
-                (insira como uma senha)
-                '''
+                msg.body = f'Utilize sua senha temporaria para acessar o sistema: {password}'
                 mail.send(msg)
             except:
                 ...

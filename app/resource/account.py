@@ -24,7 +24,7 @@ class ResetPasswordResource(Resource):
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
-        #SendEmail.reset_password('SACSIS XI - Redefinição de senha', user.email, tpass)
+        # Envia um email com a senha temporaria gerada.
         mail_app = current_app._get_current_object()
         Thread(target=SendEmail.reset_password, args=[
             mail_app, 'SACSIS - Redefinição de senha', user.email, tpass
