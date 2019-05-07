@@ -6,6 +6,9 @@ from sqlalchemy import or_
 
 
 class UserModel(db.Model):
+    """
+    Modelo para armazenar os dados de todos os usuários cadastrados.
+    """
     __tablename__ = 'usuarios'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +23,7 @@ class UserModel(db.Model):
     ativo = db.Column(db.Boolean, default=False)
     status_pago = db.Column(db.Boolean, default=False)
     admin = db.Column(db.Boolean, default=False)
+
     senha_temporaria = db.relationship('ResetPasswordModel', uselist=False)
 
     def hash_password(self, senha):
@@ -34,6 +38,11 @@ class UserModel(db.Model):
 
 
 class ResetPasswordModel(db.Model):
+    """
+    Modelo para armazenar as senhas temporarias criadas pra permitir
+    o acesso do usuário, esta senha e excluida quando a principal for
+    redefinida apos o login.
+    """
     __tablename__ = 'senha_opcional'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -50,6 +59,9 @@ class ResetPasswordModel(db.Model):
 
 
 class SpeakerModel(db.Model):
+    """
+    Modelo para armazenamento de todos os dados pessoais do ministrante
+    """
     __tablename__ = 'ministrante'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -68,10 +80,16 @@ class SpeakerModel(db.Model):
     instagram = db.Column(db.String(50), default=None)
     site = db.Column(db.String(50), default=None)
 
+    # Retorna uma lista com todas as palestras associadas ao ministrante
     lecture = db.relationship('LectureModel', passive_deletes=True)
+    # Retorna uma lista com todos os minicursos associados ao ministrante
     course = db.relationship('CourseModel', passive_deletes=True)
 
     def occupation(self):
+        """
+        Retorna uma string informando se o ministrante possui ocupação de
+        apenas minicurso, palestra ou ambos.
+        """
         if len(self.lecture) != 0 and len(self.course) !=0:
             return 'Minicurso & Palestra'
         elif len(self.course) != 0:
@@ -89,6 +107,9 @@ class SpeakerModel(db.Model):
 
 
 class CourseModel(db.Model):
+    """
+    Modelo de armazenamento dos dados do minicurso cadastrado pelo ministrante
+    """
     __tablename__ = 'minicurso'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -105,6 +126,9 @@ class CourseModel(db.Model):
 
 
 class LectureModel(db.Model):
+    """
+    Modelo de armazenamento dos dados da palestra cadastrada pelo ministrante
+    """
     __tablename__ = 'palestra'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -121,6 +145,10 @@ class LectureModel(db.Model):
 
 
 class TokenBlacklistModel(db.Model):
+    """
+    Modelo que armazena uma lista negra de tokens já usados no acesso
+    do formulario de cadastro do ministrante e sua palestra/minicurso 
+    """
     __tablename__ = 'token_blacklist'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -128,6 +156,10 @@ class TokenBlacklistModel(db.Model):
 
 
 class ScheduleModel(db.Model):
+    """
+    Modelo que armazena toda a programação do evento como: palestras,
+    minicursos e outros eventos personalizados.
+    """
     __tablename__ = 'programacao'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -169,6 +201,10 @@ class ScheduleModel(db.Model):
 
 
 class CourseSubsModel(db.Model):
+    """
+    Modelo de controle das incrições aos minicursos feitos pelo usuário
+    após a confirmação do pagamento.
+    """
     __tablename__ = 'usuarios_minicurso'
 
     user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), primary_key=True)
@@ -191,6 +227,9 @@ class CourseSubsModel(db.Model):
 
 
 class UserPaymentModel(db.Model):
+    """
+    Modelo para armazenar o pagamento realizado pelo usuário participante.
+    """
     __tablename__ = 'pagamentos'
 
     user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), primary_key=True)
@@ -214,6 +253,9 @@ class UserPaymentModel(db.Model):
 
 
 class LotModel(db.Model):
+    """
+    Modelo para armazenar todos os lotes cadastrados no sistema.
+    """
     __tablename__ = 'lotes'
 
     id = db.Column(db.Integer, primary_key=True)
