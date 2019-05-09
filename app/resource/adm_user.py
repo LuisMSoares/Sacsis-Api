@@ -10,6 +10,7 @@ user_admin_field = {
     'matricula': fields.String,
     'cpf': fields.String,
     'rg': fields.String,
+    'sexo': fields.String,
     'status_pago': fields.Boolean,
     'camiseta': fields.String,
     'admin': fields.Boolean
@@ -65,6 +66,8 @@ class UserAdminResource(Resource):
             user.admin = request.json['admin']
         if 'camiseta' in request.json:
             user.camiseta = request.json['camiseta']
+        if 'sexo' in request.json:
+            user.sexo = request.json['sexo']
         try:
             db.session.commit()
         except:

@@ -13,6 +13,7 @@ user_field = {
     'matricula': fields.String,
     'cpf': fields.String,
     'rg': fields.String,
+    'sexo': fields.String,
     'status_pago': fields.Boolean,
     'camiseta': fields.String
 }
@@ -33,6 +34,7 @@ class UserResource(Resource):
             matricula=request.json['matricula'],
             cpf=request.json['cpf'],
             rg=request.json['rg'],
+            sexo=request.json['sexo'],
             camiseta=request.json['camiseta']
         )
         user.hash_password(request.json['senha'])
@@ -66,6 +68,8 @@ class UserResource(Resource):
             user.matricula = request.json['matricula']
         if 'camiseta' in request.json:
             user.camiseta = request.json['camiseta']
+        if 'sexo' in request.json:
+            user.sexo = request.json['sexo']
         try:
             db.session.commit()
         except:

@@ -17,7 +17,8 @@ class UserModel(db.Model):
     matricula = db.Column(db.String(10), nullable=False)
     cpf = db.Column(db.String(11), nullable=False)
     rg = db.Column(db.String(15), nullable=False)
-    camiseta = db.Column(db.String(25), nullable=False)
+    sexo = db.Column(db.String(10), nullable=False)
+    camiseta = db.Column(db.String(50), nullable=False)
     senha = db.Column(db.String, nullable=False)
 
     ativo = db.Column(db.Boolean, default=False)

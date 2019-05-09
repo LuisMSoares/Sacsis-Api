@@ -10,6 +10,7 @@ user_field = {
     'matricula': fields.String,
     'cpf': fields.String,
     'rg': fields.String,
+    'sexo': fields.String,
     'status_pago': fields.Boolean,
     'camiseta': fields.String
 }
