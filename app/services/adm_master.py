@@ -10,7 +10,8 @@ with app.app_context():
         user = UserModel(
             nome='Administrador Mestre',
             matricula='0', cpf='0', rg='0',
-            camiseta='0', admin=True
+            camiseta='0', admin=True,
+            sexo='0'
         )
     user.email = environ.get('MASTER_ADM_LOGIN','admin')
     user.hash_password( environ.get('MASTER_ADM_PASSWORD','admin') )

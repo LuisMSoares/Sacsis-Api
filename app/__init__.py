@@ -69,16 +69,15 @@ api.add_resource(CourseScheduleResource, '/schedule/course')
 api.add_resource(LoginResource, '/login')
 api.add_resource(ResetPasswordResource, '/reset_password')
 
-# Master administrator registration
-from app.services.adm_master import *
-
 # Database init tables
 with app.app_context():
     try:
         # remove this in production
         # db.drop_all()
         # print(' * Drop all tables!')
-
         db.create_all()
     except:
         ...
+
+# Master administrator registration
+from app.services.adm_master import *
