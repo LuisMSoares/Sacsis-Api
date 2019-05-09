@@ -16,7 +16,7 @@ class Excel:
     @staticmethod
     def report_from_records(dict_data, file_type="csv", file_name="export_data"):
         return excel.make_response_from_records(
-            dict_data*2,
+            dict_data,
             file_type,
             file_name=file_name
         )
