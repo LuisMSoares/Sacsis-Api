@@ -1,5 +1,5 @@
 from flask_restful import Resource, request, fields, marshal
-from app.db import db, LectureModel, CourseModel, ScheduleModel
+from app.db import db, LectureModel, CourseModel, ScheduleModel, CourseSubsModel
 from app.resource import message, admin_required
 from app.services.excel import Excel
 from datetime import datetime
@@ -25,11 +25,13 @@ user_course_schedule_report_field = {
 
 
 class ScheduleAdminResource(Resource):
-    def user_course_schedule_report(self, schedule_id):
+    def user_course_schedule_report(self, schedule_id, request):
         ucsr = CourseSubsModel.query.filter(or_(
             CourseSubsModel.option1 == schedule_id,
             CourseSubsModel.option2 == schedule_id
         )).all()
+        if len(ucsr) == 0:
+            return marshal({'message':'Nenhum participante encontrado'}, message), 404
         ucsr = [marshal(u,user_course_schedule_report_field) for u in ucsr]
         file_name = request.args.get('filename', 'export-data')
         file_type = request.args.get('csvformat', 0)
@@ -41,7 +43,9 @@ class ScheduleAdminResource(Resource):
         # relatorio de participantes associados ao minicurso
         report = request.args.get('report', 0)
         if int(report) == 1:
-            return self.user_course_schedule_report(schedule_field)
+            if not schedule_id:
+                return marshal({'message':'Codigo do minicurso não encontrado!'}, message), 404
+            return self.user_course_schedule_report(schedule_id, request)
 
         if schedule_id:
             schedule = ScheduleModel.query.filter_by(id=schedule_id).first()

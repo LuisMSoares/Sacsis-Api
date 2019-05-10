@@ -38,7 +38,6 @@ class UserResource(Resource):
             camiseta=request.json['camiseta']
         )
         user.hash_password(request.json['senha'])
-        user.activate_account() # apenas testes
         try:
             db.session.add(user)
             db.session.commit()
