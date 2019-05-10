@@ -27,7 +27,6 @@ speaker_admin_list_fields = {
 class SpeakerAdminResource(Resource):
     @admin_required
     def get(self, speaker_id=None):
-        report = request.args.get('report', 0)
         if speaker_id:
             speaker = SpeakerModel.query.filter_by(id=speaker_id).first()
             if not speaker:
@@ -38,6 +37,8 @@ class SpeakerAdminResource(Resource):
             speakers = [marshal(t, speaker_admin_field) for t in qspeakers]
             if len(speakers) == 0:
                 return marshal({'message':'Nenhum ministrante encontrado!'}, message), 404
+            # relatorio de ministrantes cadastrados
+            report = request.args.get('report', 0)
             if int(report) == 1:
                 file_type = request.args.get('csvformat', 0)
                 file_type = 'csv' if int(file_type) == 1 else 'xls'

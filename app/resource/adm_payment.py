@@ -2,6 +2,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, marshal, fields, request
 from app.db import db, UserPaymentModel, LotModel, UserModel
 from app.resource import message, admin_required
+from app.services.excel import Excel
 from datetime import datetime
 
 lot_field = {
@@ -31,7 +32,15 @@ payment_list_fields = {
     'quantidade': fields.Integer,
     'pagamentos': fields.List(fields.Nested(payment_field)),
 }
-
+upayment_report_field = {
+    'nome': fields.String(attribute=lambda x: x.user.nome),
+    'matricula': fields.String(attribute=lambda x: x.user.matricula),
+    'email': fields.String(attribute=lambda x: x.user.email),
+    'data_pagamento': fields.DateTime(dt_format='iso8601'),
+    'camiseta': fields.String(attribute=lambda x: x.user.camiseta),
+    'codigo_lote': fields.String(attribute=lambda x: x.lote_id),
+    'valor': fields.Float
+}
 
 class LotAdminResource(Resource):
     @admin_required
@@ -91,6 +100,14 @@ class PaymentAdminResource(Resource):
         upayment = UserPaymentModel.query.order_by(UserPaymentModel.data_pagamento).all()
         if len(upayment) == 0:
             return marshal({'message':'Nenhum pagamento foi encontrado.'}, message), 404
+        # relatorio de participantes pagos, tamanho de camiseta, e total arrecadado
+        report = request.args.get('report', 0)
+        if int(report) == 1:
+            file_type = request.args.get('csvformat', 0)
+            file_type = 'csv' if int(file_type) == 1 else 'xls'
+            upayment = [marshal(up, upayment_report_field) for up in upayment]
+            return Excel.report_from_records(upayment, file_type=file_type, 
+                                             file_name='relatorio-pagamentos')
         return marshal({
             'quantidade': len(upayment),
             'pagamentos': upayment

@@ -1,7 +1,9 @@
 from flask_restful import Resource, request, fields, marshal
 from app.db import db, LectureModel, CourseModel, ScheduleModel
 from app.resource import message, admin_required
+from app.services.excel import Excel
 from datetime import datetime
+from sqlalchemy import or_
 
 schedule_field = {
     'id' : fields.Integer,
@@ -16,11 +18,31 @@ schedule_field = {
     'course_id' : fields.Integer,
     'lecture_id' : fields.Integer
 }
+user_course_schedule_report_field = {
+    'nome' : fields.String(attribute=lambda x: x.user.nome),
+    'matricula' : fields.String(attribute=lambda x: x.user.matricula),
+}
 
 
 class ScheduleAdminResource(Resource):
+    def user_course_schedule_report(self, schedule_id):
+        ucsr = CourseSubsModel.query.filter(or_(
+            CourseSubsModel.option1 == schedule_id,
+            CourseSubsModel.option2 == schedule_id
+        )).all()
+        ucsr = [marshal(u,user_course_schedule_report_field) for u in ucsr]
+        file_name = request.args.get('filename', 'export-data')
+        file_type = request.args.get('csvformat', 0)
+        file_type = 'csv' if int(file_type) == 1 else 'xls'
+        return Excel.report_from_records(ucsr, file_type=file_type,
+                                         file_name=file_name)
     @admin_required
     def get(self, schedule_id=None):
+        # relatorio de participantes associados ao minicurso
+        report = request.args.get('report', 0)
+        if int(report) == 1:
+            return self.user_course_schedule_report(schedule_field)
+
         if schedule_id:
             schedule = ScheduleModel.query.filter_by(id=schedule_id).first()
             if not schedule:

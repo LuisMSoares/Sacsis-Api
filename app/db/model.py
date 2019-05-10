@@ -212,6 +212,7 @@ class CourseSubsModel(db.Model):
     option1 = db.Column(db.Integer, db.ForeignKey('programacao.id'))
     option2 = db.Column(db.Integer, db.ForeignKey('programacao.id'))
 
+    user = db.relationship('UserModel', foreign_keys=[user_id])
     op1r = db.relationship('ScheduleModel', foreign_keys=[option1])
     op2r = db.relationship('ScheduleModel', foreign_keys=[option2])
 
