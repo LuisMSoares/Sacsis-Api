@@ -38,7 +38,7 @@ class UserResource(Resource):
             camiseta=request.json['camiseta']
         )
         user.hash_password(request.json['senha'])
-        # user.activate_account() # comment this in production
+        user.activate_account() # comment this in production
         try:
             db.session.add(user)
             db.session.commit()
@@ -47,11 +47,11 @@ class UserResource(Resource):
             return marshal({'message':'Endereço de email já cadastrado'}, message), 422
         else:
             # Envia um email com um link de confirmação de cadastro.
-            link = url_for('activate_account', token='token', _external=True)
-            mail_app = current_app._get_current_object()
-            Thread(target=SendEmail.user_confirm, args=[
-                mail_app,'SACSIS - Confirmação de cadastro', user.email, link
-            ]).start()
+            # link = url_for('activate_account', token='token', _external=True)
+            # mail_app = current_app._get_current_object()
+            # Thread(target=SendEmail.user_confirm, args=[
+            #    mail_app,'SACSIS - Confirmação de cadastro', user.email, link
+            # ]).start()
             return marshal({'message':'Usuário cadastrado'}, message), 201
 
     @jwt_token_required_custom
