@@ -42,6 +42,7 @@ class SpeakerResource(Resource):
             return marshal(token_data, message), 401
         if int(datetime.now().timestamp()) > token_data['expiration']:
             return marshal({'message':'Token informado expirado!'}, message), 401
+        # realiza o cadastro dos dados do ministrante
         rjson, avatar = loads(request.form['json_data']), request.files['avatar']
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)

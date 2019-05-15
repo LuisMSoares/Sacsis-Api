@@ -17,6 +17,7 @@ lot_price_field = {
     'valor' : fields.Float,
 }
 payment_field = {
+    'id' : fields.Integer,
     'user_nome' : fields.String(attribute=lambda x: x.user.nome),
     'lote_id' : fields.Integer,
     'valor' : fields.Float,
@@ -115,12 +116,15 @@ class PaymentAdminResource(Resource):
 
     @admin_required
     def post(self):
-        lot = LotModel.query.filter_by(id=request.json['lote_id']).first()
         user = UserModel.query.filter_by(id=request.json['user_id']).first()
-        if not lot:
-            return marshal({'message':'Lote não encontrado.'}, message), 404
         if not user:
             return marshal({'message':'Usuário informado não encontrado.'}, message), 404
+        upayment = UserPaymentModel.query.filter_by(user_id = request.json['user_id']).first()
+        if payment:
+            return marshal({'message':'Usuário já possui um pagamento registrado.'}, message), 422
+        lot = LotModel.query.filter_by(id=request.json['lote_id']).first()
+        if not lot:
+            return marshal({'message':'Lote não encontrado.'}, message), 404
         upayment = UserPaymentModel(
             user_id = request.json['user_id'],
             lote_id = lot.id,
