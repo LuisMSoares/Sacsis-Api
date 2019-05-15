@@ -17,7 +17,7 @@ lot_price_field = {
     'valor' : fields.Float,
 }
 payment_field = {
-    'id' : fields.Integer,
+    'user_id' : fields.Integer,
     'user_nome' : fields.String(attribute=lambda x: x.user.nome),
     'lote_id' : fields.Integer,
     'valor' : fields.Float,
