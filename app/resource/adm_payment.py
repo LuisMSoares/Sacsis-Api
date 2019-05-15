@@ -120,7 +120,7 @@ class PaymentAdminResource(Resource):
         if not user:
             return marshal({'message':'Usuário informado não encontrado.'}, message), 404
         upayment = UserPaymentModel.query.filter_by(user_id = request.json['user_id']).first()
-        if payment:
+        if upayment:
             return marshal({'message':'Usuário já possui um pagamento registrado.'}, message), 422
         lot = LotModel.query.filter_by(id=request.json['lote_id']).first()
         if not lot:
