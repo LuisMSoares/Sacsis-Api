@@ -34,9 +34,12 @@ class UserResource(Resource):
             matricula=request.json['matricula'],
             cpf=request.json['cpf'],
             rg=request.json['rg'],
-            sexo=request.json['sexo'],
             camiseta=request.json['camiseta']
         )
+        if request.json['sexo'] <= 0:
+            user.sexo='Masculino'
+        else:
+            user.sexo='Feminino'
         user.hash_password(request.json['senha'])
         user.activate_account() # comment this in production
         try:
