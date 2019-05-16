@@ -38,7 +38,7 @@ class UserResource(Resource):
         )
         if request.json['sexo'] <= 0:
             user.sexo='Masculino'
-        else:
+        elif request.json['sexo'] >= 1:
             user.sexo='Feminino'
         user.hash_password(request.json['senha'])
         user.activate_account() # comment this in production
