@@ -24,7 +24,7 @@ payment_field = {
     'valor' : fields.Float(attribute=lambda x: 0 if not x.valor else x.valor),
     'data_pagamento' : fields.DateTime(dt_format='iso8601'),
     'data_modificacao' : fields.DateTime(dt_format='iso8601'),
-    'status': fields.String(attribute=lambda x: 'Invalidado' if not x.valor else 'Valido'),
+    'status': fields.String(attribute=lambda x: 'Invalidado' if not x.valor else 'Válido'),
     'admin_nome' : fields.String(attribute=lambda x: x.user_admin.nome)
 }
 lot_list_fields = {
