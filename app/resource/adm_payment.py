@@ -149,6 +149,10 @@ class PaymentAdminResource(Resource):
             return marshal({'message':'Lote não encontrado.'}, message), 404
         if not upayment:
             return marshal({'message':'Pagamento de usuário não encontrado.'}, message), 404
+        # reativa o pagamento do usuário caso tenha sido removido anteriormente.
+        if not upayment.valor: 
+            user = UserModel.query.filter_by(id=request.json['user_id']).first()
+            user.status_pago = True
         upayment.lote_id = lot.id
         upayment.valor = lot.valor
         upayment.data_modificacao = datetime.now()
