@@ -5,7 +5,7 @@ from app.services.excel import Excel
 from datetime import datetime
 from sqlalchemy import or_
 
-schedule_field = {
+schedule_course_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.String,
@@ -13,10 +13,24 @@ schedule_field = {
     'data_fim' : fields.DateTime(dt_format='iso8601'),
     'vagas' : fields.Integer,
     'turma' : fields.String,
+    'course_id' : fields.Integer,
+}
+schedule_lecture_field = {
+    'id' : fields.Integer,
+    'local' : fields.String,
+    'dia' : fields.String,
+    'data_inicio' : fields.DateTime(dt_format='iso8601'),
+    'data_fim' : fields.DateTime(dt_format='iso8601'),
+    'lecture_id' : fields.Integer
+}
+schedule_other_field = {
+    'id' : fields.Integer,
+    'local' : fields.String,
+    'dia' : fields.String,
+    'data_inicio' : fields.DateTime(dt_format='iso8601'),
+    'data_fim' : fields.DateTime(dt_format='iso8601'),
     'titulo' : fields.String,
     'descricao' : fields.String,
-    'course_id' : fields.Integer,
-    'lecture_id' : fields.Integer
 }
 user_course_schedule_report_field = {
     'nome' : fields.String(attribute=lambda x: x.user.nome),
@@ -55,8 +69,18 @@ class ScheduleAdminResource(Resource):
         schedules = ScheduleModel.query.order_by(ScheduleModel.id).all()
         if len(schedules) == 0:
             return marshal({'message':'Nenhuma programação cadastrada foi encontrada.'}, message), 404
-        format_schedules = [marshal(s, schedule_field) for s in schedules]
-        return {'quantidade': len(format_schedules),'programacao': format_schedules}, 200
+        other_schedule, course_schedule, lecture_schedule = [], [], []
+        for s in schedules:
+            if s.course_id == 0 and s.lecture_id == 0:
+                other_schedule.append(s)
+            elif s.course_id != 0:
+                course_schedule.append(s)
+            elif s.lecture_id != 0:
+                lecture_schedule.append(s)
+
+        return {'course' : course_schedule,
+                'lecture': lecture_schedule,
+                'other': other_schedule}, 200
 
     @admin_required
     def post(self):
