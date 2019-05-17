@@ -15,7 +15,8 @@ remove_lecture_field = {
 }
 load_title_field = {
     'id': fields.Integer,
-    'titulo': fields.String
+    'titulo': fields.String,
+    'ministrante': fields.String(attribute=lambda obj: obj.speaker.nome)
 }
 
 
