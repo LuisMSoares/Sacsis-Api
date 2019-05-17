@@ -49,12 +49,12 @@ class ScheduleResource(Resource):
                 continue
             values[str(i)] = []
             for schedule in schedules:
+                if not schedule.course_id and not schedule.lecture_id:
+                    values[str(i)].append(marshal(schedule, other_schedule_field))
                 if schedule.course_id:
                     values[str(i)].append(marshal(schedule, course_schedule_field))
                 if schedule.lecture_id:
                     values[str(i)].append(marshal(schedule, lecture_schedule_field))
-                if not schedule.course_id and not schedule.lecture_id:
-                    values[str(i)].append(marshal(schedule, other_schedule_field))
         if not values:
             return marshal({'message':'Nenhuma programação encontrada.'}, message), 404
         return values, 200
