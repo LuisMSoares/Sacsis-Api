@@ -19,6 +19,7 @@ lot_price_field = {
 payment_field = {
     'user_id' : fields.Integer,
     'user_nome' : fields.String(attribute=lambda x: x.user.nome),
+    'matricula' : fields.String(attribute=lambda x: x.user.matricula),
     'lote_id' : fields.Integer,
     'valor' : fields.Float,
     'data_pagamento' : fields.DateTime(dt_format='iso8601'),
