@@ -51,42 +51,6 @@ class SpeakerAdminResource(Resource):
                 }, 200
 
     @admin_required
-    def put(self):
-        rjson = json.loads(request.form['json_data'])
-        speaker = SpeakerModel.query.filter_by(id=rjson['id']).first()
-        if not speaker:
-            return marshal({'message':'Ministrante inexistente'}, message), 404
-        if 'avatar' in request.files:
-            speaker.set_avatar(request.files['avatar'])
-        if 'nome' in rjson:
-            speaker.nome = rjson['nome']
-        if 'resumo' in rjson:
-            speaker.resumo = rjson['nome']
-        if 'rg' in rjson:
-            speaker.rg = rjson['nome']
-        if 'cpf' in rjson:
-            speaker.cpf = rjson['nome']
-        if 'facebook' in rjson:
-            speaker.facebook = rjson['nome']
-        if 'twitter' in rjson:
-            speaker.twitter = rjson['nome']
-        if 'instagram' in rjson:
-            speaker.instagram = rjson['nome']
-        if 'site' in rjson:
-            speaker.site = rjson['nome']
-        if 'email' in rjson:
-            speaker.email = rjson['email']
-        if 'telefone' in rjson:
-            speaker.telefone = rjson['telefone']
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            return marshal({'message':'Erro interno'}, message), 500
-        else:
-            return marshal(speaker, speaker_admin_field), 201
-
-    @admin_required
     def delete(self, speaker_id=None):
         if not speaker_id:
             return marshal({'message':'Informe o id do ministrante'}, message), 404
