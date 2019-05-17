@@ -21,9 +21,10 @@ payment_field = {
     'user_nome' : fields.String(attribute=lambda x: x.user.nome),
     'matricula' : fields.String(attribute=lambda x: x.user.matricula),
     'lote_id' : fields.Integer,
-    'valor' : fields.Float,
+    'valor' : fields.Float(attribute=lambda x: 0 if not x.valor else x.valor),
     'data_pagamento' : fields.DateTime(dt_format='iso8601'),
     'data_modificacao' : fields.DateTime(dt_format='iso8601'),
+    'status': fields.String(attribute=lambda x: 'Invalidado' if not x.valor else 'Valido'),
     'admin_nome' : fields.String(attribute=lambda x: x.user_admin.nome)
 }
 lot_list_fields = {
@@ -41,7 +42,7 @@ upayment_report_field = {
     'data_pagamento': fields.DateTime(dt_format='iso8601'),
     'camiseta': fields.String(attribute=lambda x: x.user.camiseta),
     'codigo_lote': fields.String(attribute=lambda x: x.lote_id),
-    'valor': fields.Float
+    'valor': fields.Float(attribute=lambda x: 0 if not x.valor else x.valor)
 }
 
 class LotAdminResource(Resource):
