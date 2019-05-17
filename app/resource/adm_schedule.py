@@ -71,11 +71,11 @@ class ScheduleAdminResource(Resource):
             return marshal({'message':'Nenhuma programação cadastrada foi encontrada.'}, message), 404
         other_schedule, course_schedule, lecture_schedule = [], [], []
         for s in schedules:
-            if s.course_id == 0 and s.lecture_id == 0:
+            if not s.course_id and not s.lecture_id:
                 other_schedule.append(marshal(s, schedule_other_field))
-            elif s.course_id > 0:
+            elif s.course_id:
                 course_schedule.append(marshal(s, schedule_course_field))
-            elif s.lecture_id > 0:
+            elif s.lecture_id:
                 lecture_schedule.append(marshal(s, schedule_lecture_field))
 
         return {'course' : course_schedule,
