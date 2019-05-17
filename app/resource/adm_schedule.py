@@ -72,11 +72,11 @@ class ScheduleAdminResource(Resource):
         other_schedule, course_schedule, lecture_schedule = [], [], []
         for s in schedules:
             if s.course_id == 0 and s.lecture_id == 0:
-                other_schedule.append(s)
+                other_schedule.append(marshal(s, schedule_other_field))
             elif s.course_id != 0:
-                course_schedule.append(s)
+                course_schedule.append(marshal(s, schedule_course_field))
             elif s.lecture_id != 0:
-                lecture_schedule.append(s)
+                lecture_schedule.append(marshal(s, schedule_lecture_field))
 
         return {'course' : course_schedule,
                 'lecture': lecture_schedule,
