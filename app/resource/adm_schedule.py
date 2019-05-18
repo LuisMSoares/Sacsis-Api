@@ -13,6 +13,7 @@ schedule_course_field = {
     'data_fim' : fields.DateTime(dt_format='iso8601'),
 
     'titulo' : fields.String(attribute=lambda obj: obj.course.titulo),
+    'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
     'vagas' : fields.Integer,
     'turma' : fields.String,
     'course_id' : fields.Integer,
@@ -25,6 +26,7 @@ schedule_lecture_field = {
     'data_fim' : fields.DateTime(dt_format='iso8601'),
 
     'titulo' : fields.String(attribute=lambda obj: obj.lecture.titulo),
+    'ministrante': fields.String(attribute=lambda obj: obj.lecture.speaker.nome),
     'lecture_id' : fields.Integer
 }
 schedule_other_field = {
