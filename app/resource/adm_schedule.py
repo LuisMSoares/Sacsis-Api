@@ -59,7 +59,7 @@ class ScheduleAdminResource(Resource):
         file_type = 'csv' if int(file_type) == 1 else 'xls'
         return Excel.report_from_records(ucsr, file_type=file_type,
                                          file_name=file_name)
-    #@admin_required
+    @admin_required
     def get(self, schedule_id=None):
         # relatorio de participantes associados ao minicurso
         report = request.args.get('report', 0)
