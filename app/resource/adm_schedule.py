@@ -9,8 +9,8 @@ schedule_course_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.Integer,
-    'data_inicio' : fields.DateTime(dt_format='iso8601'),
-    'data_fim' : fields.DateTime(dt_format='iso8601'),
+    'data_inicio' : fields.DateTime(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
+    'data_fim' : fields.DateTime(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
 
     'titulo' : fields.String(attribute=lambda obj: obj.course.titulo),
     'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
@@ -22,8 +22,8 @@ schedule_lecture_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.Integer,
-    'data_inicio' : fields.DateTime(dt_format='iso8601'),
-    'data_fim' : fields.DateTime(dt_format='iso8601'),
+    'data_inicio' : fields.DateTime(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
+    'data_fim' : fields.DateTime(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
 
     'titulo' : fields.String(attribute=lambda obj: obj.lecture.titulo),
     'ministrante': fields.String(attribute=lambda obj: obj.lecture.speaker.nome),
@@ -33,8 +33,8 @@ schedule_other_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.Integer,
-    'data_inicio' : fields.DateTime(dt_format='iso8601'),
-    'data_fim' : fields.DateTime(dt_format='iso8601'),
+    'data_inicio' : fields.DateTime(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
+    'data_fim' : fields.DateTime(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
 
     'titulo' : fields.String,
     'descricao' : fields.String,
@@ -91,7 +91,7 @@ class ScheduleAdminResource(Resource):
 
     @admin_required
     def post(self):
-        def dt(x): return datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%f')
+        def dt(x): return datetime.strptime(x, '%d/%m/%Y %H:%M')
         formtype = request.args.get('formtype', None)
         if not formtype:
             return marshal({'message':'Tipo de formulario não econtrado!'}, message), 404
@@ -133,7 +133,7 @@ class ScheduleAdminResource(Resource):
 
     @admin_required
     def put(self):
-        def dt(x): return datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%f')
+        def dt(x): return datetime.strptime(x, '%d/%m/%Y %H:%M')
         formtype = request.args.get('formtype', None)
         if not formtype:
             return marshal({'message':'Tipo de formulario não econtrado!'}, message), 404

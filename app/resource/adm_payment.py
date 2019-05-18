@@ -98,7 +98,7 @@ class LotAdminResource(Resource):
 
 
 class PaymentAdminResource(Resource):
-    #@admin_required
+    @admin_required
     def get(self):
         upayment = UserPaymentModel.query.order_by(UserPaymentModel.data_pagamento).all()
         if len(upayment) == 0:
