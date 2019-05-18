@@ -8,8 +8,8 @@ from datetime import datetime
 lot_field = {
     'id' : fields.Integer,
     'valor' : fields.Float,
-    'data_criacao' : fields.DateTime(dt_format='iso8601'),
-    'data_modificacao' : fields.DateTime(dt_format='iso8601'),
+    'data_criacao' : fields.String(attribute=lambda x: x.data_criacao.strftime('%d/%m/%Y %H:%M')),
+    'data_modificacao' : fields.String(attribute=lambda x: x.data_modificacao.strftime('%d/%m/%Y %H:%M')),
     'admin_nome' : fields.String(attribute=lambda x: x.user.nome)
 }
 lot_price_field = {
@@ -22,8 +22,8 @@ payment_field = {
     'matricula' : fields.String(attribute=lambda x: x.user.matricula),
     'lote_id' : fields.Integer,
     'valor' : fields.Float(attribute=lambda x: 0 if not x.valor else x.valor),
-    'data_pagamento' : fields.DateTime(dt_format='iso8601'),
-    'data_modificacao' : fields.DateTime(dt_format='iso8601'),
+    'data_pagamento' : fields.String(attribute=lambda x: x.data_pagamento.strftime('%d/%m/%Y %H:%M')),
+    'data_modificacao' : fields.String(attribute=lambda x: x.data_modificacao.strftime('%d/%m/%Y %H:%M')),
     'status': fields.String(attribute=lambda x: 'Invalidado' if not x.valor else 'Válido'),
     'admin_nome' : fields.String(attribute=lambda x: x.user_admin.nome)
 }

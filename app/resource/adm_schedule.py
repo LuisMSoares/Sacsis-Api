@@ -9,8 +9,8 @@ schedule_course_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.Integer,
-    'data_inicio' : fields.DateTime(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
-    'data_fim' : fields.DateTime(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
+    'data_inicio' : fields.String(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
+    'data_fim' : fields.String(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
 
     'titulo' : fields.String(attribute=lambda obj: obj.course.titulo),
     'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
@@ -22,8 +22,8 @@ schedule_lecture_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.Integer,
-    'data_inicio' : fields.DateTime(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
-    'data_fim' : fields.DateTime(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
+    'data_inicio' : fields.String(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
+    'data_fim' : fields.String(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
 
     'titulo' : fields.String(attribute=lambda obj: obj.lecture.titulo),
     'ministrante': fields.String(attribute=lambda obj: obj.lecture.speaker.nome),
@@ -33,8 +33,8 @@ schedule_other_field = {
     'id' : fields.Integer,
     'local' : fields.String,
     'dia' : fields.Integer,
-    'data_inicio' : fields.DateTime(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
-    'data_fim' : fields.DateTime(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
+    'data_inicio' : fields.String(attribute=lambda x: x.data_inicio.strftime('%d/%m/%Y %H:%M')),
+    'data_fim' : fields.String(attribute=lambda x: x.data_fim.strftime('%d/%m/%Y %H:%M')),
 
     'titulo' : fields.String,
     'descricao' : fields.String,
