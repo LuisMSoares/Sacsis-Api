@@ -43,7 +43,7 @@ other_schedule_field = {
 class ScheduleResource(Resource):
     def get(self):
         values = {}
-        for i in range(1,8):
+        for i in range(0,5):
             schedules = ScheduleModel.query.order_by(ScheduleModel.data_inicio).filter_by(dia=i).all()
             if not schedules:
                 continue
