@@ -8,7 +8,7 @@ from sqlalchemy import or_
 schedule_course_field = {
     'id' : fields.Integer,
     'local' : fields.String,
-    'dia' : fields.String,
+    'dia' : fields.Integer,
     'data_inicio' : fields.DateTime(dt_format='iso8601'),
     'data_fim' : fields.DateTime(dt_format='iso8601'),
 
@@ -20,7 +20,7 @@ schedule_course_field = {
 schedule_lecture_field = {
     'id' : fields.Integer,
     'local' : fields.String,
-    'dia' : fields.String,
+    'dia' : fields.Integer,
     'data_inicio' : fields.DateTime(dt_format='iso8601'),
     'data_fim' : fields.DateTime(dt_format='iso8601'),
 
@@ -30,7 +30,7 @@ schedule_lecture_field = {
 schedule_other_field = {
     'id' : fields.Integer,
     'local' : fields.String,
-    'dia' : fields.String,
+    'dia' : fields.Integer,
     'data_inicio' : fields.DateTime(dt_format='iso8601'),
     'data_fim' : fields.DateTime(dt_format='iso8601'),
 
