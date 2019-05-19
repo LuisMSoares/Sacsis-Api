@@ -177,11 +177,7 @@ class ScheduleAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao cadastrar a programação!'}, message), 422
         else:
-<<<<<<< HEAD
             return marshal(schedule, marshal_field), 200
-=======
-            return {'message':'Programação atualizada com sucesso!'}, 200
->>>>>>> 25133674e86270ead0c38abba5ca563078dda0f2
 
     @admin_required
     def delete(self, schedule_id):
