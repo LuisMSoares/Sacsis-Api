@@ -110,6 +110,7 @@ class ScheduleAdminResource(Resource):
                 turma = request.json['turma'],
                 course = course
             )
+            marshal_field = schedule_course_field
         elif formtype == 'lecture':
             lecture = LectureModel.query.filter_by(id=request.json['lecture_id']).first()
             if not lecture:
@@ -117,11 +118,13 @@ class ScheduleAdminResource(Resource):
             schedule.setLecture(
                 lecture = lecture
             )
+            marshal_field = schedule_lecture_field
         elif formtype == 'other':
             schedule.setOther(
                 titulo = request.json['titulo'],
                 descricao = request.json['descricao']
             )
+            marshal_field = schedule_other_field
         try:
             db.session.add(schedule)
             db.session.commit()
@@ -129,7 +132,7 @@ class ScheduleAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao cadastrar a programação!'}, message), 422
         else:
-            return {'message':'Programação cadastrada com sucesso!'}, 201
+            return marshal(schedule, marshal_field), 201
 
     @admin_required
     def put(self):
@@ -152,6 +155,7 @@ class ScheduleAdminResource(Resource):
                 turma = request.json['turma'],
                 course = course
             )
+            marshal_field = schedule_course_field
         elif formtype == 'lecture':
             lecture = LectureModel.query.filter_by(id=request.json['lecture_id']).first()
             if not lecture:
@@ -159,11 +163,13 @@ class ScheduleAdminResource(Resource):
             schedule.setLecture(
                 lecture = lecture
             )
+            marshal_field = schedule_lecture_field
         elif formtype == 'other':
             schedule.setOther(
                 titulo = request.json['titulo'],
                 descricao = request.json['descricao']
             )
+            marshal_field = schedule_other_field
         try:
             db.session.add(schedule)
             db.session.commit()
@@ -171,7 +177,7 @@ class ScheduleAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao cadastrar a programação!'}, message), 422
         else:
-            return {'message':'Programação cadastrada com sucesso!'}, 20
+            return marshal(schedule, marshal_field), 200
 
     @admin_required
     def delete(self, schedule_id):
