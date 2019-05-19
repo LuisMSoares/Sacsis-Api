@@ -140,8 +140,8 @@ class ScheduleAdminResource(Resource):
         schedule = ScheduleModel.query.filter_by(id=request.json['id']).first()
         schedule.local = request.json['local']
         schedule.dia = dt(request.json['data_inicio']).weekday()
-        schedule.data_inicio = request.json['data_inicio']
-        schedule.data_fim = request.json['data_fim']
+        schedule.data_inicio = dt(request.json['data_inicio'])
+        schedule.data_fim = dt(request.json['data_fim'])
 
         if formtype == 'course':
             course = CourseModel.query.filter_by(id=request.json['course_id']).first()
@@ -171,7 +171,7 @@ class ScheduleAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao cadastrar a programação!'}, message), 422
         else:
-            return {'message':'Programação cadastrada com sucesso!'}, 20
+            return {'message':'Programação atualizada com sucesso!'}, 200
 
     @admin_required
     def delete(self, schedule_id):
