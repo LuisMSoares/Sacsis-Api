@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 # JSON Web Token Configuration
 app.config['JWT_SECRET_KEY'] = environ.get('JWT_KEY','This is a secret key')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(seconds=20)#days=environ.get('JWT_EXPIRES_DAYS', 1))
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=environ.get('JWT_EXPIRES_DAYS', 1))
 # Email Server Configuration
 app.config['MAIL_SERVER']=environ.get('MAIL_SERVER','smtp.gmail.com')
 app.config['MAIL_PORT'] = environ.get('MAIL_PORT',465)
