@@ -183,10 +183,10 @@ class ScheduleModel(db.Model):
 
     def vacRemaining(self):
         reserved = CourseSubsModel.query.filter(or_(
-            CourseSubsModel.option1 == self.course_id,
-            CourseSubsModel.option2 == self.course_id
+            CourseSubsModel.option1 == self.id,
+            CourseSubsModel.option2 == self.id
         )).count()
-        return reserved
+        return self.vagas - reserved
 
     def setCourse(self, vagas, turma, course):
         self.vagas = vagas
