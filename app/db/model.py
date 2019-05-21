@@ -186,7 +186,7 @@ class ScheduleModel(db.Model):
             CourseSubsModel.option1 == self.course_id,
             CourseSubsModel.option2 == self.course_id
         )).count()
-        return self.vagas - reserved
+        return reserved
 
     def setCourse(self, vagas, turma, course):
         self.vagas = vagas
