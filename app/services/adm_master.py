@@ -13,7 +13,7 @@ with app.app_context():
             camiseta='0', admin=True,
             sexo='0'
         )
-    user.email = environ.get('MASTER_ADM_LOGIN','admin')
+    user.email = environ.get('MASTER_ADM_LOGIN','admin@admin.br')
     user.hash_password( environ.get('MASTER_ADM_PASSWORD','admin') )
     user.activate_account()
     try:
