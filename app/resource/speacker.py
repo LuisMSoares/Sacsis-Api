@@ -46,7 +46,6 @@ class SpeakerResource(Resource):
         rjson, avatar = request.json, request.json['avatar']
 
         from io import BytesIO
-        from PIL import Image
         starter = file.find(',')
         avatar = file[starter+1:]
         avatar = bytes(avatar, encoding="ascii")
