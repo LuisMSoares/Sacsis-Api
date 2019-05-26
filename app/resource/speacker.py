@@ -139,12 +139,12 @@ class SpeakerResource(Resource):
         else:
             speaker = set_speaker_data(rjson, speakerObj=speaker)
             speaker.set_avatar(avatar, 'avatar.png')
-        #try:
-        db.session.commit()
-        return (True, speaker)
-        #except:
-        #    db.session.rollback()
-        #    return (False,)
+        try:
+            db.session.commit()
+            return (True, speaker)
+        except:
+            db.session.rollback()
+            return (False,)
             
     def limit_time(self, x):
         return 1 if x<=0 else 7 if x>7 else x
