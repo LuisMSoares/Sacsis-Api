@@ -102,8 +102,8 @@ class SpeakerModel(db.Model):
     def set_created_data(self):
         self.criado_em = datetime.now()
 
-    def set_avatar(self, image_file):
-        self.img_nome = image_file.filename
+    def set_avatar(self, image_file, filename):
+        self.img_nome = filename
         self.img_dados = image_file.read()
 
 
