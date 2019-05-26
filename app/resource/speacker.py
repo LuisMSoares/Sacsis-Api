@@ -47,7 +47,7 @@ class SpeakerResource(Resource):
         # convert base64 image in bytes
         file64 = rjson['avatar']
         starter = file64.find(',')
-        avatar = file64['avatar'][starter+1:]
+        avatar = file64[starter+1:]
         avatar = bytes(avatar, encoding="ascii")
 
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
