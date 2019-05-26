@@ -3,7 +3,7 @@ from app.db import db, SpeakerModel, CourseModel, LectureModel, TokenBlacklistMo
 from app.resource import message, admin_required, jsonGet
 from app.services import Token
 from datetime import datetime
-from json import loads
+import base64
 
 token_field = {
     'route_type' : fields.String,
@@ -43,7 +43,8 @@ class SpeakerResource(Resource):
         if int(datetime.now().timestamp()) > token_data['expiration']:
             return marshal({'message':'Token informado expirado!'}, message), 401
         # realiza o cadastro dos dados do ministrante
-        rjson, avatar = loads(request.form['json_data']), request.files['avatar']
+        rjson = request.json
+        avatar = base64.b64decode( rjson['avatar'] )
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)
         elif token_data['route_type'] == 'course' == rjson['type_form']:
