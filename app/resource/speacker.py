@@ -46,16 +46,19 @@ class SpeakerResource(Resource):
             return marshal({'message':'Token informado expirado!'}, message), 401
         # realiza o cadastro dos dados do ministrante
         rjson = request.json
-        # convert base64 image in bytes
-        starter = rjson['avatar'].find(',')
-        file64 = rjson['avatar'][starter+1:]
+
+        # Converte uma imagem em base64 em bytes
+        file64 = rjson['avatar'][ rjson['avatar'].find(',') +1:]
         fileBytes = bytes(file64, encoding="ascii")
-        avatar = Image.open(BytesIO(base64.b64decode(fileBytes)))
+        fileAvatar = Image.open(BytesIO(base64.b64decode(fileBytes)))
+        # cria um buffer de um arquivo
+        bufferAvatar = BytesIO()
+        avatarfile.save(bufferAvatar, format='png')
 
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
-            return self.LectureReg(rjson, avatar, token)
+            return self.LectureReg(rjson, bufferAvatar, token)
         elif token_data['route_type'] == 'course' == rjson['type_form']:
-            return self.CourseReg(rjson, avatar, token)
+            return self.CourseReg(rjson, bufferAvatar, token)
         return marshal({'message':'Token invalido para este tipo de formulario!'}, message), 401
 
     def CourseReg(self, rjson, avatar, token=None):
