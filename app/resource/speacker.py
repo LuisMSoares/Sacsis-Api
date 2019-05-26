@@ -45,7 +45,6 @@ class SpeakerResource(Resource):
         # realiza o cadastro dos dados do ministrante
         rjson = request.json
         # convert base64 image in bytes
-        return rjson['avatar']
         file64 = rjson['avatar']
         starter = file64.find(',')
         avatar = file64['avatar'][starter+1:]
