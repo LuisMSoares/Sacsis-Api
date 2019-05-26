@@ -53,7 +53,7 @@ class SpeakerResource(Resource):
         fileAvatar = Image.open(BytesIO(base64.b64decode(fileBytes)))
         # cria um buffer de um arquivo
         bufferAvatar = BytesIO()
-        avatarfile.save(bufferAvatar, format='png')
+        fileAvatar.save(bufferAvatar, format='png')
 
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, bufferAvatar, token)
