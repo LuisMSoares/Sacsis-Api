@@ -107,7 +107,8 @@ class CourseScheduleResource(Resource):
 
     def _saveOption(self, course_id, flambda):
         if course_id == -1:
-            return flambda(None)
+            flambda(None)
+            return 'Você saiu desse minicurso!'
         else:
             course = ScheduleModel.query.filter(and_(
                 ScheduleModel.course_id.isnot(None),
