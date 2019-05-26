@@ -102,9 +102,9 @@ class SpeakerModel(db.Model):
     def set_created_data(self):
         self.criado_em = datetime.now()
 
-    def set_avatar(self, image_bytes, filename):
+    def set_avatar(self, image_file, filename):
         self.img_nome = filename
-        self.img_dados = image_bytes
+        self.img_dados = image_file.read()
 
 
 class CourseModel(db.Model):
