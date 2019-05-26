@@ -43,7 +43,14 @@ class SpeakerResource(Resource):
         if int(datetime.now().timestamp()) > token_data['expiration']:
             return marshal({'message':'Token informado expirado!'}, message), 401
         # realiza o cadastro dos dados do ministrante
-        rjson, avatar = loads(request.form['json_data']), request.files['avatar']
+        rjson, avatar = request.json, request.json['avatar']
+
+        from io import BytesIO
+        from PIL import Image
+        starter = file.find(',')
+        image_data = file[starter+1:]
+        image_data = bytes(image_data, encoding="ascii")
+
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)
         elif token_data['route_type'] == 'course' == rjson['type_form']:
