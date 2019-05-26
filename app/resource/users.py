@@ -72,8 +72,10 @@ class UserResource(Resource):
             user.matricula = request.json['matricula']
         if 'camiseta' in request.json:
             user.camiseta = request.json['camiseta']
-        if 'sexo' in request.json:
-            user.sexo = request.json['sexo']
+        if request.json['sexo'] <= 0:
+            user.sexo='Masculino'
+        elif request.json['sexo'] >= 1:
+            user.sexo='Feminino'
         try:
             db.session.commit()
         except:
