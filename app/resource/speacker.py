@@ -130,7 +130,7 @@ class SpeakerResource(Resource):
             db.session.add(speaker)
         else:
             speaker = set_speaker_data(rjson, speakerObj=speaker)
-            speaker.set_avatar(avatar)
+            speaker.set_avatar(avatar, 'avatar')
         try:
             db.session.commit()
             return (True, speaker)
