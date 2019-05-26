@@ -69,7 +69,7 @@ class CourseScheduleResource(Resource):
             return marshal({'message':'Ocorreu um erro ao salvar suas reservas.'}, message), 422
         return marshal(response, course_sub_fields), 201
 
-    # Remove a reserva da vaga para a opção informada no json do request
+    '''# Remove a reserva da vaga para a opção informada no json do request
     @jwt_token_required_custom
     def put(self):
         # verifica se o usuário realizou o pagamento da inscrição.
@@ -90,9 +90,13 @@ class CourseScheduleResource(Resource):
         except:
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao salvar alterações.'}, message), 200
-        return marshal({'message':'Alterações salvas com sucesso.'}, message), 200
+        return marshal({'message':'Alterações salvas com sucesso.'}, message), 200'''
 
     def _dupVerify(self, actualy, op1=None, op2=None):
+        # retorna os valores originais caso seseja remover um minicurso
+        if op1 == -1 or op2 == -1:
+            return actualy
+        # verifica possiveis opções de minicursos duplicados.
         if op1 not in actualy and op1 != None:
             actualy[0] = op1
         if op2 not in actualy and op2 != None:
@@ -102,14 +106,17 @@ class CourseScheduleResource(Resource):
         return actualy
 
     def _saveOption(self, course_id, flambda):
-        course = ScheduleModel.query.filter(and_(
-            ScheduleModel.course_id.isnot(None),
-            ScheduleModel.id == course_id
-        )).first()
-        if not course:
-            return 'Minicurso selecionado não encontrado.'
-        if course.vacRemaining() > 0:
-            flambda(course.id)
-            return 'Vaga reservada com sucesso!'
+        if course_id == -1:
+            return flambda(None)
         else:
-            return 'Todas as vagas foram preenchidas.'
+            course = ScheduleModel.query.filter(and_(
+                ScheduleModel.course_id.isnot(None),
+                ScheduleModel.id == course_id
+            )).first()
+            if not course:
+                return 'Minicurso selecionado não encontrado.'
+            if course.vacRemaining() > 0:
+                flambda(course.id)
+                return 'Vaga reservada com sucesso!'
+            else:
+                return 'Todas as vagas foram preenchidas.'
