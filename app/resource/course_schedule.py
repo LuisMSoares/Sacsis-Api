@@ -95,7 +95,7 @@ class CourseScheduleResource(Resource):
     def _dupVerify(self, actualy, op1=None, op2=None):
         # retorna os valores originais caso seseja remover um minicurso
         if op1 == -1 or op2 == -1:
-            return actualy
+            return [op1, op2]
         # verifica possiveis opções de minicursos duplicados.
         if op1 not in actualy and op1 != None:
             actualy[0] = op1
