@@ -104,7 +104,7 @@ class SpeakerModel(db.Model):
 
     def set_avatar(self, image_file, filename):
         self.img_nome = filename
-        self.img_dados = image_file.read()
+        self.img_dados = image_file
 
 
 class CourseModel(db.Model):

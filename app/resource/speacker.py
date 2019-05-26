@@ -46,20 +46,24 @@ class SpeakerResource(Resource):
             return marshal({'message':'Token informado expirado!'}, message), 401
         # realiza o cadastro dos dados do ministrante
         rjson = request.json
+        avatar = self.ImagetoBytes( rjson['avatar'] )
+        if token_data['route_type'] == 'lecture' == rjson['type_form']:
+            return self.LectureReg(rjson, avatar, token)
+        elif token_data['route_type'] == 'course' == rjson['type_form']:
+            return self.CourseReg(rjson, avatar, token)
+        return marshal({'message':'Token invalido para este tipo de formulario!'}, message), 401
 
-        # Converte uma imagem em base64 em bytes
-        file64 = rjson['avatar'][ rjson['avatar'].find(',') +1:]
+
+    #------------------------------------------------------------------------------------------------
+    def ImagetoBytes(self, avatar):
+        # Converte uma imagem de base64 em bytes
+        file64 = avatar[avatar.find(',')+1:]
         fileBytes = bytes(file64, encoding="ascii")
         fileAvatar = Image.open(BytesIO(base64.b64decode(fileBytes)))
-        # cria um buffer de um arquivo
+        # cria um buffer da imagem
         bufferAvatar = BytesIO()
         fileAvatar.save(bufferAvatar, format='png')
-
-        if token_data['route_type'] == 'lecture' == rjson['type_form']:
-            return self.LectureReg(rjson, bufferAvatar, token)
-        elif token_data['route_type'] == 'course' == rjson['type_form']:
-            return self.CourseReg(rjson, bufferAvatar, token)
-        return marshal({'message':'Token invalido para este tipo de formulario!'}, message), 401
+        return bufferAvatar.getvalue()
 
     def CourseReg(self, rjson, avatar, token=None):
         # Cadastro de ministrante
@@ -125,15 +129,16 @@ class SpeakerResource(Resource):
             speakerObj.instagram = jsonGet(rjson,'instagram')
             speakerObj.site = jsonGet(rjson, 'site')
             return speakerObj
+        
         speaker = SpeakerModel.query.filter_by(cpf=rjson['cpf']).first()
         if not speaker:
             speaker = set_speaker_data(rjson)
             speaker.set_created_data()
-            speaker.set_avatar(avatar, 'avatar')
+            speaker.set_avatar(avatar, 'avatar.png')
             db.session.add(speaker)
         else:
             speaker = set_speaker_data(rjson, speakerObj=speaker)
-            speaker.set_avatar(avatar, 'avatar')
+            speaker.set_avatar(avatar, 'avatar.png')
         try:
             db.session.commit()
             return (True, speaker)
