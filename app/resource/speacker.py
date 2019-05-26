@@ -48,8 +48,8 @@ class SpeakerResource(Resource):
         from io import BytesIO
         from PIL import Image
         starter = file.find(',')
-        image_data = file[starter+1:]
-        image_data = bytes(image_data, encoding="ascii")
+        avatar = file[starter+1:]
+        avatar = bytes(avatar, encoding="ascii")
 
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)
