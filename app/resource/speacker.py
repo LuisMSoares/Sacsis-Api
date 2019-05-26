@@ -4,6 +4,8 @@ from app.resource import message, admin_required, jsonGet
 from app.services import Token
 from datetime import datetime
 from io import BytesIO
+from PIL import Image
+import base64
 
 token_field = {
     'route_type' : fields.String,
@@ -45,10 +47,10 @@ class SpeakerResource(Resource):
         # realiza o cadastro dos dados do ministrante
         rjson = request.json
         # convert base64 image in bytes
-        file64 = rjson['avatar']
-        starter = file64.find(',')
-        avatar = file64[starter+1:]
-        avatar = bytes(avatar, encoding="ascii")
+        starter = rjson['avatar'].find(',')
+        file64 = rjson['avatar'][starter+1:]
+        fileBytes = bytes(file64, encoding="ascii")
+        avatar = Image.open(BytesIO(base64.b64decode(fileBytes)))
 
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
             return self.LectureReg(rjson, avatar, token)
