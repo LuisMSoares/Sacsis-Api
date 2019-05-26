@@ -45,8 +45,9 @@ class SpeakerResource(Resource):
         # realiza o cadastro dos dados do ministrante
         rjson = request.json
         # convert base64 image in bytes
-        starter = request.json['avatar'].find(',')
-        avatar = request.json['avatar'][starter+1:]
+        file64 = rjson['avatar']
+        starter = file64.find(',')
+        avatar = file64['avatar'][starter+1:]
         avatar = bytes(avatar, encoding="ascii")
 
         if token_data['route_type'] == 'lecture' == rjson['type_form']:
