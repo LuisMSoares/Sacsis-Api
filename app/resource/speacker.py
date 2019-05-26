@@ -124,7 +124,7 @@ class SpeakerResource(Resource):
         if not speaker:
             speaker = set_speaker_data(rjson)
             speaker.set_created_data()
-            speaker.set_avatar(avatar, f'avatar-{rjson['nome'][:10]}')
+            speaker.set_avatar(avatar, 'avatar')
             db.session.add(speaker)
         else:
             speaker = set_speaker_data(rjson, speakerObj=speaker)
