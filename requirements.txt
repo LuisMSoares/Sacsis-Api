@@ -6,8 +6,8 @@ flask-cors
 flask-mail
 flask-excel
 pyexcel-xls
-psycopg2
-psycopg2-binary
+pillow
 passlib
 gunicorn
-pillow
+psycopg2
+psycopg2-binary
