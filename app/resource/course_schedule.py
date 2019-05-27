@@ -49,7 +49,7 @@ class CourseScheduleResource(Resource):
         # continua o fluxo caso pagamento esteja ok
         user_id = get_jwt_identity()
         course_id1 = jsonGet(request.json, 'option1', default=0)
-        course_id2 = jsonGet(request.json, 'option2', default=0)
+        course_id2 = 0#jsonGet(request.json, 'option2', default=0) # desativado para a sacsis 2019
         # verifica se existe alguma reserva armazenada.
         course_sub = CourseSubsModel.query.filter_by(user_id=user_id).first()
         if not course_sub:
