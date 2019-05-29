@@ -1,4 +1,4 @@
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import create_access_token, get_jwt_identity
 from app.resource import message, jwt_token_required_custom
 from flask_restful import Resource, request, marshal, fields
 from flask import url_for, current_app
@@ -59,7 +59,8 @@ class UserResource(Resource):
 
     @jwt_token_required_custom
     def put(self):
-        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
+        user_id = get_jwt_identity()
+        user = UserModel.query.filter_by(id=user_id).first()
         if not user:
             return marshal({'message':'Usuário inexistente'}, message), 404
         if 'nome' in request.json:
@@ -70,16 +71,20 @@ class UserResource(Resource):
             user.rg = request.json['rg']
         if 'matricula' in request.json:
             user.matricula = request.json['matricula']
-        if 'camiseta' in request.json:
-            user.camiseta = request.json['camiseta']
-        if request.json['sexo'] <= 0:
-            user.sexo='Masculino'
-        elif request.json['sexo'] >= 1:
-            user.sexo='Feminino'
+        # if 'camiseta' in request.json:
+        #     user.camiseta = request.json['camiseta']
+        # if request.json['sexo'] <= 0:
+        #     user.sexo='Masculino'
+        # elif request.json['sexo'] >= 1:
+        #     user.sexo='Feminino'
         try:
             db.session.commit()
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
         else:
-            return marshal(user, user_field)
+            jwt_token = create_access_token(identity=user_id)
+            data = {'jwt_token':jwt_token, 'dados': marshal(user, user_field)}
+            if user.admin:
+                data['admin'] = True
+            return data, 200

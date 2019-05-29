@@ -5,7 +5,7 @@ from app import app
 
 with app.app_context():
     #Master Administrator Registration
-    user = UserModel.query.filter_by(nome='Administrador Mestre').first()
+    user = UserModel.query.filter_by(id=1).first()
     if not user:
         user = UserModel(
             nome='Administrador Mestre',
