@@ -186,6 +186,7 @@ class ScheduleAdminResource(Resource):
             return marshal({'message':'Programação não encontrada!'}, message), 404
         try:
             db.session.delete(schedule)
+            db.session.commit()
         except:
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao excluir a programação selecionada!'}, message), 404

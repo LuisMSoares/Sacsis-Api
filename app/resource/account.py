@@ -40,6 +40,7 @@ class ResetPasswordResource(Resource):
         user.hash_password(request.json['senha'])
         try:
             db.session.delete(reset_user)
+            db.session.commit()
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500

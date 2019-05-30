@@ -85,6 +85,7 @@ class UserAdminResource(Resource):
             return marshal({'message':'Usuário não encontrado'}, message), 404
         try:
             db.session.delete(user)
+            db.session.commit()
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
