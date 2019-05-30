@@ -59,7 +59,6 @@ class SpeakerAdminResource(Resource):
             return marshal({'message':'Ministrante não encontrado'}, message), 404
         try:
             db.session.delete(speaker)
-            db.session.commit()
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500

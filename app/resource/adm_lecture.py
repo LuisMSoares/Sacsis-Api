@@ -64,7 +64,6 @@ class LectureAdminResource(Resource):
         lecture = LectureModel.query.filter_by(id=lecture_id).first()
         try:
             db.session.delete(lecture)
-            db.session.commit()
         except:
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
