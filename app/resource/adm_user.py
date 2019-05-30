@@ -89,4 +89,4 @@ class UserAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
         else:
-            return marshal(user, user_admin_field)
+            return marshal(user, user_admin_field), 201

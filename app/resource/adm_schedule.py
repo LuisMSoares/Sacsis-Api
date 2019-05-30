@@ -190,4 +190,4 @@ class ScheduleAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao excluir a programação selecionada!'}, message), 404
         else:
-            return marshal({'message':'Programação excluida com sucesso!'}, message), 200
+            return marshal({'message':'Programação excluida com sucesso!'}, message), 201

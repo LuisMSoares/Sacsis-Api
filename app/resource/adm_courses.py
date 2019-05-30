@@ -69,4 +69,4 @@ class CourseAdminResource(Resource):
             db.session.rollback()
             return marshal({'message':'Erro interno'}, message), 500
         else:
-            return marshal(course, remove_course_field)
+            return marshal(course, remove_course_field), 201
