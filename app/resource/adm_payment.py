@@ -179,4 +179,4 @@ class PaymentAdminResource(Resource):
         except:
             db.session.rollback()
             return marshal({'message':'Ocorreu um erro ao remover pagamento'}, message), 422
-        return marshal(upayment, payment_field), 200
+        return marshal(upayment, payment_field), 201
