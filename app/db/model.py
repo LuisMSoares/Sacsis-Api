@@ -91,12 +91,15 @@ class SpeakerModel(db.Model):
         Retorna uma string informando se o ministrante possui ocupação de
         apenas minicurso, palestra ou ambos.
         """
-        if len(self.lecture) != 0 and len(self.course) !=0:
-            return 'Minicurso & Palestra'
-        elif len(self.course) != 0:
-            return 'Minicurso'
-        elif len(self.lecture) !=0:
-            return 'Palestra'
+        try:
+            if len(self.lecture) != 0 and len(self.course) !=0:
+                return 'Minicurso & Palestra'
+            elif len(self.course) != 0:
+                return 'Minicurso'
+            elif len(self.lecture) !=0:
+                return 'Palestra'
+        except:
+            ...
         return '-'
 
     def set_created_data(self):
