@@ -37,7 +37,7 @@ class UserAdminResource(Resource):
                 user = UserModel.query.filter_by(admin=adm_filter).order_by(UserModel.id).all()
             else:
                 user = UserModel.query.order_by(UserModel.id).all()
-            admin_login = environ.get('MASTER_ADM_LOGIN','admin')
+            admin_login = environ.get('MASTER_ADM_LOGIN','admin@admin.br')
             users = [marshal(u, user_admin_field) for u in user if u.email != admin_login]
             if len(users) == 0:
                 return marshal({'message':'Nenhum usuário encontrado'}, message), 404
