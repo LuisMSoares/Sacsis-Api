@@ -16,7 +16,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(50), nullable=False, unique=True)
     matricula = db.Column(db.String(10), nullable=False)
     cpf = db.Column(db.String(11), nullable=False)
-    rg = db.Column(db.String(15), nullable=False)
+    rg = db.Column(db.String(20), nullable=False)
     sexo = db.Column(db.String(10), nullable=False)
     camiseta = db.Column(db.String(50), nullable=False)
     senha = db.Column(db.String, nullable=False)
@@ -67,7 +67,7 @@ class SpeakerModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), nullable=False)
-    resumo = db.Column(db.String(250), nullable=False)
+    resumo = db.Column(db.String, nullable=False)
     rg = db.Column(db.String(20), nullable=False, unique=True)
     cpf = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String, nullable=False)
