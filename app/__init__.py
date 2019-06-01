@@ -51,7 +51,7 @@ from app.services.custom_routes import *
 from app.resource import (UserResource, LoginResource, UserAdminResource,
 SpeakerResource, ResetPasswordResource, SpeakerAdminResource, ScheduleResource,
 CourseAdminResource, LectureAdminResource, ScheduleAdminResource, CourseScheduleResource,
-LotAdminResource, PaymentAdminResource)
+LotAdminResource, PaymentAdminResource, ScheduleModalResource)
 
 adm_api.add_resource(UserAdminResource, '/user', '/user/<int:user_id>')
 adm_api.add_resource(SpeakerAdminResource, '/speaker', '/speaker/<int:speaker_id>')
