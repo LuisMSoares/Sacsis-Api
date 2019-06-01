@@ -3,6 +3,8 @@ from app.resource import message
 from app.db import db, ScheduleModel
 
 course_schedule_modal_field = {
+    'tipo': fields.Integer(default='minicurso'),
+
     'avatar': fields.String(
         attribute=lambda obj: url_for('get_image', img_id=obj.course.speaker.id, _external=True)),
     'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
@@ -15,6 +17,8 @@ course_schedule_modal_field = {
     'conteudo': fields.String(attribute=lambda obj: obj.course.conteudo)
 }
 lecture_schedule_modal_field = {
+    'tipo': fields.Integer(default='palesta'),
+
     'avatar': fields.String(
         attribute=lambda obj: url_for('get_image', img_id=obj.lecture.speaker.id, _external=True)),
     'ministrante': fields.String(attribute=lambda obj: obj.lecture.speaker.nome),
@@ -27,6 +31,7 @@ lecture_schedule_modal_field = {
     'conteudo': fields.String(attribute=lambda obj: obj.lecture.conteudo)
 }
 other_schedule_modal_field = {
+    'tipo': fields.Integer(default='outros'),
     'titulo' : fields.String,
     'descricao' : fields.String
 }
