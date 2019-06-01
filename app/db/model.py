@@ -121,7 +121,7 @@ class SpeakerModel(db.Model):
         if not self.instagram: return None
         return f'https://www.instagram.com/{self.instagram}'
 
-    def parseTwitter()
+    def parseTwitter():
         if not self.twitter: return None
         return f'https://twitter.com/{self.twitter}'
 
