@@ -64,6 +64,7 @@ adm_api.add_resource(PaymentAdminResource, '/payment', '/payment/<int:user_id>')
 api.add_resource(UserResource, '/user')
 api.add_resource(SpeakerResource, '/speaker', '/speaker/')
 api.add_resource(ScheduleResource, '/schedule')
+api.add_resource(ScheduleModalResource, '/schedule/info/<int:schedule_id>')
 api.add_resource(CourseScheduleResource, '/schedule/course')
 
 api.add_resource(LoginResource, '/login')

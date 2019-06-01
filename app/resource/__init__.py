@@ -60,6 +60,7 @@ from app.resource.adm_payment import PaymentAdminResource, LotAdminResource
 from app.resource.users import UserResource
 from app.resource.speacker import SpeakerResource
 from app.resource.schedule import ScheduleResource
+from app.resource.schedule_modal import ScheduleModalResource
 from app.resource.course_schedule import CourseScheduleResource
 
 from app.resource.login import LoginResource
