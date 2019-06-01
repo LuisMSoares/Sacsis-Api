@@ -34,7 +34,7 @@ other_schedule_modal_field = {
 
 class ScheduleModalResource(Resource):
     def get(self, schedule_id):
-        schedule = ScheduleModel.query.filter_by(id=schedule_id).all()
+        schedule = ScheduleModel.query.filter_by(id=schedule_id).first()
         if not schedule:
             return marshal({'message':'Programação não encontrada.'}, message), 404
         if not schedule.course_id and not schedule.lecture_id:
