@@ -9,9 +9,9 @@ course_schedule_modal_field = {
         attribute=lambda obj: url_for('get_image', img_id=obj.course.speaker.id, _external=True)),
     'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
     'resumo': fields.String(attribute=lambda obj: obj.course.speaker.resumo),
-    'facebook': fields.String(attribute=lambda obj: obj.course.speaker.facebook),
-    'instagram': fields.String(attribute=lambda obj: obj.course.speaker.instagram),
-    'twitter': fields.String(attribute=lambda obj: obj.course.speaker.twitter),
+    'facebook': fields.String(attribute=lambda obj: obj.course.speaker.parseFacebook()),
+    'instagram': fields.String(attribute=lambda obj: obj.course.speaker.parseInstagram()),
+    'twitter': fields.String(attribute=lambda obj: obj.course.speaker.parseTwitter()),
     'site': fields.String(attribute=lambda obj: obj.course.speaker.site),
     'titulo': fields.String(attribute=lambda obj: obj.course.titulo),
     'conteudo': fields.String(attribute=lambda obj: obj.course.conteudo)
