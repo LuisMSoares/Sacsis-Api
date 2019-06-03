@@ -109,6 +109,22 @@ class SpeakerModel(db.Model):
         self.img_nome = filename
         self.img_dados = image_file
 
+    def parseFacebook(self):
+        if not self.facebook: return None
+        try:
+            id = int(self.facebook)
+            return f'https://www.facebook.com/profile.php?id={id}'
+        except:
+            return f'https://www.facebook.com/{self.facebook}'
+    
+    def parseInstagram(self):
+        if not self.instagram: return None
+        return f'https://www.instagram.com/{self.instagram}'
+
+    def parseTwitter(self):
+        if not self.twitter: return None
+        return f'https://twitter.com/{self.twitter}'
+
 
 class CourseModel(db.Model):
     """
