@@ -12,13 +12,13 @@ class UserModel(db.Model):
     __tablename__ = 'usuarios'
 
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False, unique=True)
-    matricula = db.Column(db.String(10), nullable=False)
-    cpf = db.Column(db.String(11), nullable=False)
-    rg = db.Column(db.String(20), nullable=False)
-    sexo = db.Column(db.String(10), nullable=False)
-    camiseta = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
+    matricula = db.Column(db.String, nullable=False)
+    cpf = db.Column(db.String, nullable=False)
+    rg = db.Column(db.String, nullable=False)
+    sexo = db.Column(db.String, nullable=False)
+    camiseta = db.Column(db.String, nullable=False)
     senha = db.Column(db.String, nullable=False)
 
     ativo = db.Column(db.Boolean, default=False)
@@ -66,20 +66,20 @@ class SpeakerModel(db.Model):
     __tablename__ = 'ministrante'
 
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String, nullable=False)
     resumo = db.Column(db.String, nullable=False)
-    rg = db.Column(db.String(20), nullable=False, unique=True)
-    cpf = db.Column(db.String(20), nullable=False, unique=True)
+    rg = db.Column(db.String, nullable=False, unique=True)
+    cpf = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False)
-    telefone = db.Column(db.String(20), nullable=False)
+    telefone = db.Column(db.String, nullable=False)
     img_nome = db.Column(db.String, nullable=False)
     img_dados = db.Column(db.LargeBinary, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     # redes sociais
-    facebook = db.Column(db.String(50), default=None)
-    twitter = db.Column(db.String(50), default=None)
-    instagram = db.Column(db.String(50), default=None)
-    site = db.Column(db.String(50), default=None)
+    facebook = db.Column(db.String, default=None)
+    twitter = db.Column(db.String, default=None)
+    instagram = db.Column(db.String, default=None)
+    site = db.Column(db.String, default=None)
 
     # Retorna uma lista com todas as palestras associadas ao ministrante
     lecture = db.relationship('LectureModel', passive_deletes=True)
@@ -109,6 +109,22 @@ class SpeakerModel(db.Model):
         self.img_nome = filename
         self.img_dados = image_file
 
+    def parseFacebook(self):
+        if not self.facebook: return None
+        try:
+            id = int(self.facebook)
+            return f'https://www.facebook.com/profile.php?id={id}'
+        except:
+            return f'https://www.facebook.com/{self.facebook}'
+    
+    def parseInstagram(self):
+        if not self.instagram: return None
+        return f'https://www.instagram.com/{self.instagram}'
+
+    def parseTwitter(self):
+        if not self.twitter: return None
+        return f'https://twitter.com/{self.twitter}'
+
 
 class CourseModel(db.Model):
     """
@@ -117,7 +133,7 @@ class CourseModel(db.Model):
     __tablename__ = 'minicurso'
 
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(50), nullable=False)
+    titulo = db.Column(db.String, nullable=False)
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
@@ -136,7 +152,7 @@ class LectureModel(db.Model):
     __tablename__ = 'palestra'
 
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(50), nullable=False)
+    titulo = db.Column(db.String, nullable=False)
     conteudo = db.Column(db.String, nullable=False)
     criado_em = db.Column(db.DateTime, nullable=False)
     
@@ -167,13 +183,13 @@ class ScheduleModel(db.Model):
     __tablename__ = 'programacao'
 
     id = db.Column(db.Integer, primary_key=True)
-    local = db.Column(db.String(50), nullable=False)
+    local = db.Column(db.String, nullable=False)
     dia = db.Column(db.Integer, nullable=False)
     data_inicio = db.Column(db.DateTime, nullable=False)
     data_fim = db.Column(db.DateTime, nullable=False)
     # Courses
     vagas = db.Column(db.Integer, default=None)
-    turma = db.Column(db.String(20), default=None)
+    turma = db.Column(db.String, default=None)
     course_id = db.Column(db.Integer, db.ForeignKey('minicurso.id'))
     # Lecture
     lecture_id = db.Column(db.Integer, db.ForeignKey('palestra.id'))

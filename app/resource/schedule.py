@@ -39,17 +39,6 @@ other_schedule_field = {
     'descricao' : fields.String
 }
 
-speaker_field = {
-    'id' : fields.Integer,
-    'nome' : fields.String,
-    'resumo' : fields.String,
-    'facebook' : fields.String,
-    'twitter' : fields.String,
-    'instagram' : fields.String,
-    'site' : fields.String,
-    'avatar': fields.String(
-        attribute=lambda o: url_for('get_image', img_id=o.id, _external=True))
-}
 
 class ScheduleResource(Resource):
     def get(self):
