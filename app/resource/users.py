@@ -50,7 +50,7 @@ class UserResource(Resource):
             return marshal({'message':'Endereço de email já cadastrado'}, message), 422
         else:
             # Envia um email com um link de confirmação de cadastro.
-            # link = url_for('activate_account', token='token', _external=True, _scheme='https')
+            # link = url_for('activate_account', token='token', _external=True)
             # mail_app = current_app._get_current_object()
             # Thread(target=SendEmail.user_confirm, args=[
             #    mail_app,'SACSIS - Confirmação de cadastro', user.email, link
