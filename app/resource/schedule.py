@@ -14,7 +14,7 @@ course_schedule_field = {
     'minicurso' : fields.String(attribute=lambda obj: obj.course.titulo),
     'ministrante': fields.String(attribute=lambda obj: obj.course.speaker.nome),
     'avatar': fields.String(
-        attribute=lambda obj: url_for('get_image', img_id=obj.course.speaker.id, _external=True))
+        attribute=lambda obj: url_for('get_image', img_id=obj.course.speaker.id, _external=True), _scheme='https')
 }
 lecture_schedule_field = {
     'id' : fields.Integer,
@@ -26,7 +26,7 @@ lecture_schedule_field = {
     'palestra' : fields.String(attribute=lambda obj: obj.lecture.titulo),
     'ministrante': fields.String(attribute=lambda obj: obj.lecture.speaker.nome),
     'avatar': fields.String(
-        attribute=lambda obj: url_for('get_image', img_id=obj.lecture.speaker.id, _external=True))
+        attribute=lambda obj: url_for('get_image', img_id=obj.lecture.speaker.id, _external=True), _scheme='https')
 }
 other_schedule_field = {
     'id' : fields.Integer,
