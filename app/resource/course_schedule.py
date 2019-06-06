@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, fields, marshal, request
 from app.db import db, ScheduleModel, UserModel, CourseSubsModel
 from app.resource import jwt_token_required_custom, jsonGet, message
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 
 course_schedule_fields = {
     'id' : fields.Integer,
@@ -49,21 +49,23 @@ class CourseScheduleResource(Resource):
         # continua o fluxo caso pagamento esteja ok
         user_id = get_jwt_identity()
         course_id1 = jsonGet(request.json, 'option1', default=0)
-        course_id2 = 0#jsonGet(request.json, 'option2', default=0) # desativado para a sacsis 2019
+        course_id2 = jsonGet(request.json, 'option2', default=0)
         # verifica se existe alguma reserva armazenada.
         course_sub = CourseSubsModel.query.filter_by(user_id=user_id).first()
         if not course_sub:
             course_sub = CourseSubsModel(user_id=user_id)
         myoptions = [course_sub.option1, course_sub.option2]
-        # garante que não ocorra reservas duplicadas.
+        # garante que não ocorra reservas duplicadas (mesmo id da programação).
         myoptions = self._dupVerify(myoptions, op1=course_id1, op2=course_id2)
+        # verificar se os minicursos não iguais
+        myoptions = self._coursesVerify(*myoptions)
 
         # realiza as reservas das vadas dos minicursos armazenando uma resposta
         response = {
             'option1': self._saveOption(myoptions[0], lambda id: course_sub.setOption1(id)),
             'option2': self._saveOption(myoptions[1], lambda id: course_sub.setOption2(id))
         }
-        # persiste as alterações/'novas informações' no banco de dados
+        # persiste as alterações no banco de dados
         try:
             db.session.add(course_sub)
             db.session.commit()
@@ -72,31 +74,8 @@ class CourseScheduleResource(Resource):
             return marshal({'message':'Ocorreu um erro ao salvar suas reservas.'}, message), 422
         return marshal(response, course_sub_fields), 201
 
-    '''# Remove a reserva da vaga para a opção informada no json do request
-    @jwt_token_required_custom
-    def put(self):
-        # verifica se o usuário realizou o pagamento da inscrição.
-        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
-        if not user.status_pago:
-            return marshal({'message':'Pagamento ainda pendente!'}, message), 401
-        # continua o fluxo caso pagamento esteja ok
-        user_id = get_jwt_identity()
-        course_sub = CourseSubsModel.query.filter_by(user_id=user_id).first()
-        if not course_sub:
-            return marshal({'message':'Não existe reservas para este usuário.'}, message), 404
-        course_id1 = jsonGet(request.json, 'option1', default=False)
-        course_id2 = jsonGet(request.json, 'option2', default=False)
-        if course_id1 == True: course_sub.option1 = None
-        if course_id2 == True: course_sub.option2 = None
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            return marshal({'message':'Ocorreu um erro ao salvar alterações.'}, message), 200
-        return marshal({'message':'Alterações salvas com sucesso.'}, message), 200'''
-
     def _dupVerify(self, actualy, op1=None, op2=None):
-        # retorna os valores originais caso seseja remover um minicurso
+        # retorna os valores originais caso deseja remover um minicurso
         if op1 == -1 or op2 == -1:
             return [op1, op2]
         # verifica possiveis opções de minicursos duplicados.
@@ -108,10 +87,23 @@ class CourseScheduleResource(Resource):
             actualy[0] = op1
         return actualy
 
+    def _coursesVerify(self, option1, option2):
+        courses = ScheduleModel.query.filter(or_(
+            ScheduleModel.id == option1,
+            ScheduleModel.id == option2,
+        )).all()
+        if len(courses) == 2:
+            if courses[0].course_id == courses[1].course_id:
+                return [option1, -2]
+        return [option1, option2]
+
     def _saveOption(self, course_id, flambda):
         if course_id == -1:
             flambda(None)
             return 'Você saiu desse minicurso!'
+        if course_id == -2:
+            flambda(None)
+            return 'Minicurso duplicado encontrado!'
         else:
             course = ScheduleModel.query.filter(and_(
                 ScheduleModel.course_id.isnot(None),
