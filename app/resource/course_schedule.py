@@ -49,7 +49,7 @@ class CourseScheduleResource(Resource):
         # continua o fluxo caso pagamento esteja ok
         user_id = get_jwt_identity()
         course_id1 = jsonGet(request.json, 'option1', default=0)
-        course_id2 = 0#jsonGet(request.json, 'option2', default=0) # desativado para a sacsis 2019
+        course_id2 = jsonGet(request.json, 'option2', default=0)
         # verifica se existe alguma reserva armazenada.
         course_sub = CourseSubsModel.query.filter_by(user_id=user_id).first()
         if not course_sub:
@@ -63,7 +63,7 @@ class CourseScheduleResource(Resource):
             'option1': self._saveOption(myoptions[0], lambda id: course_sub.setOption1(id)),
             'option2': self._saveOption(myoptions[1], lambda id: course_sub.setOption2(id))
         }
-        # persiste as alterações/'novas informações' no banco de dados
+        # persiste as alterações no banco de dados
         try:
             db.session.add(course_sub)
             db.session.commit()
@@ -72,31 +72,8 @@ class CourseScheduleResource(Resource):
             return marshal({'message':'Ocorreu um erro ao salvar suas reservas.'}, message), 422
         return marshal(response, course_sub_fields), 201
 
-    '''# Remove a reserva da vaga para a opção informada no json do request
-    @jwt_token_required_custom
-    def put(self):
-        # verifica se o usuário realizou o pagamento da inscrição.
-        user = UserModel.query.filter_by(id=get_jwt_identity()).first()
-        if not user.status_pago:
-            return marshal({'message':'Pagamento ainda pendente!'}, message), 401
-        # continua o fluxo caso pagamento esteja ok
-        user_id = get_jwt_identity()
-        course_sub = CourseSubsModel.query.filter_by(user_id=user_id).first()
-        if not course_sub:
-            return marshal({'message':'Não existe reservas para este usuário.'}, message), 404
-        course_id1 = jsonGet(request.json, 'option1', default=False)
-        course_id2 = jsonGet(request.json, 'option2', default=False)
-        if course_id1 == True: course_sub.option1 = None
-        if course_id2 == True: course_sub.option2 = None
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            return marshal({'message':'Ocorreu um erro ao salvar alterações.'}, message), 200
-        return marshal({'message':'Alterações salvas com sucesso.'}, message), 200'''
-
     def _dupVerify(self, actualy, op1=None, op2=None):
-        # retorna os valores originais caso seseja remover um minicurso
+        # retorna os valores originais caso deseja remover um minicurso
         if op1 == -1 or op2 == -1:
             return [op1, op2]
         # verifica possiveis opções de minicursos duplicados.
