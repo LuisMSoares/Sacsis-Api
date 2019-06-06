@@ -26,12 +26,10 @@
 | MAIL_DEFAULT_SENDER | Endereço de email do remetente |
 | MAIL_USE_TLS | Padrão: false |
 | MAIL_USE_SSL | Padrão: true |
-| ------ | ------ |
 
 ### Executando localmente :factory:
 
-Para configurar e executar o projeto de forma automatica e necessario ter o docker previamente instalado. 
-Caso não o possua basta seguir o guia oficial clicando [aqui](https://docs.docker.com/compose/install/)
+Para configurar e executar o projeto de forma automatica e necessario ter o Docker e o Docker Compose previamente instalado. Caso não o possua basta seguir o guia oficial clicando [aqui](https://docs.docker.com/compose/install/)
 ``` bash
 # clonando repositório
 $ git clone https://github.com/LuisMSoares/Sacsis-Api
