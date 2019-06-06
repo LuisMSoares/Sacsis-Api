@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_restful import Resource, fields, marshal, request
 from app.db import db, ScheduleModel, UserModel, CourseSubsModel
 from app.resource import jwt_token_required_custom, jsonGet, message
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 
 course_schedule_fields = {
     'id' : fields.Integer,
@@ -88,8 +88,7 @@ class CourseScheduleResource(Resource):
         return actualy
 
     def _coursesVerify(self, option1, option2):
-        courses = ScheduleModel.query.filter(and_(
-            ScheduleModel.course_id.isnot(None),
+        courses = ScheduleModel.query.filter(or_(
             ScheduleModel.id == option1,
             ScheduleModel.id == option2,
         )).all()
