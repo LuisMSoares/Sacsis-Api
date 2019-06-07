@@ -95,6 +95,8 @@ class CourseScheduleResource(Resource):
         if len(courses) == 2:
             if courses[0].course_id == courses[1].course_id:
                 return [option1, -2]
+            if courses[0].data_inicio == courses[1].data_inicio:
+                return [option1, -3]
         return [option1, option2]
 
     def _saveOption(self, course_id, flambda):
@@ -104,6 +106,9 @@ class CourseScheduleResource(Resource):
         if course_id == -2:
             flambda(None)
             return 'Minicurso duplicado encontrado!'
+        if course_id == -3:
+            flambda(None)
+            return 'Não e possivel cadastrar em minicursos de mesmo horario!'
         else:
             course = ScheduleModel.query.filter(and_(
                 ScheduleModel.course_id.isnot(None),
