@@ -41,7 +41,7 @@ $ docker-compose up --build
 
 ### Documentação da Api :book:
 
-Acesse a documentação da API clicando[aqui](https://documenter.getpostman.com/view/1867411/S17wP6sV).
+Acesse a documentação da API clicando [aqui](https://documenter.getpostman.com/view/1867411/S17wP6sV).
 
 ### Licença :lock:
 
