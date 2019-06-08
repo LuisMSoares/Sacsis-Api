@@ -27,7 +27,7 @@ app.config['MAIL_PASSWORD'] = environ.get('MAIL_PASSWORD','passatempodev23')
 app.config['MAIL_DEFAULT_SENDER'] = environ.get('MAIL_DEFAULT_SENDER','shinodu.dev@gmail.com')
 app.config['MAIL_USE_TLS'] = environ.get('MAIL_USE_TLS',False)
 app.config['MAIL_USE_SSL'] = environ.get('MAIL_USE_SSL',True)
-app.confif['PREFERRED_URL_SCHEME'] = 'https'
+app.config['PREFERRED_URL_SCHEME'] = 'https'
 
 
 # Cross Origin Resource Sharing
