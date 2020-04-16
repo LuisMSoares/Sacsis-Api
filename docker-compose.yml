@@ -27,6 +27,7 @@ services:
       - MASTER_ADM_PASSWORD=admin
       - JWT_KEY=The quick brown fox jumps over the lazy dog
       - DATABASE_URL=postgresql://admin:admin@postgresql-sacsis/sacsisdb
+      - TZ=Brazil/East
     volumes: 
       - .:/aplication
     depends_on:

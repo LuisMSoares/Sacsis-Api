@@ -318,20 +318,23 @@ class ListenerModel(db.Model):
         self.user_id = user_id
         self.schedule_id = schedule_id
 
-    def start_validation(self, schedule, tolerance=15):
-        now, tolerance = datetime.now(), timedelta(0, tolerance * 60)
+    def convert_date(self, date="2020-05-16 16:00:00"):
+        return datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
 
-        return now
+    def start_validation(self, schedule, tolerance_minutes=30):
+        now, tolerance = datetime.now(), timedelta(0, tolerance_minutes * 60)
+        now = self.convert_date()
+        data_inicio = schedule.data_inicio
 
-        if now > schedule.data_inicio - tolerance and now < schedule.data_inicio + tolerance:
+        if now > data_inicio - tolerance and now < data_inicio + tolerance:
             return now
         return False
 
-    def finish_validation(self, schedule, tolerance=15):
-        now, tolerance = datetime.now(), timedelta(0, tolerance * 60)
+    def finish_validation(self, schedule, tolerance_minutes=30):
+        now, tolerance = datetime.now(), timedelta(0, tolerance_minutes * 60)
+        now = self.convert_date()
+        data_fim = schedule.data_fim
 
-        return now
-
-        if now > schedule.data_fim - tolerance and now < schedule.data_fim + tolerance:
+        if now > data_fim - tolerance and now < data_fim + tolerance:
             return now
         return False
