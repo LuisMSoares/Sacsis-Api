@@ -57,10 +57,10 @@ class CourseScheduleResource(Resource):
         myoptions = [course_sub.option1, course_sub.option2]
         # garante que não ocorra reservas duplicadas (mesmo id da programação).
         myoptions = self._dupVerify(myoptions, op1=course_id1, op2=course_id2)
-        # verificar se os minicursos não iguais
+        # verifica se os minicursos são iguais
         myoptions = self._coursesVerify(*myoptions)
 
-        # realiza as reservas das vadas dos minicursos armazenando uma resposta
+        # realiza as reservas das vagas dos minicursos armazenando uma resposta
         response = {
             'option1': self._saveOption(myoptions[0], lambda id: course_sub.setOption1(id)),
             'option2': self._saveOption(myoptions[1], lambda id: course_sub.setOption2(id))
@@ -92,6 +92,8 @@ class CourseScheduleResource(Resource):
             ScheduleModel.id == option1,
             ScheduleModel.id == option2,
         )).all()
+        # verifica se os dois resultados recebidos são iguais, atribui apenas uma vaga em
+        # option 1 e um codigo para uma mensagem de erro em negativo para a função _saveOption
         if len(courses) == 2:
             if courses[0].course_id == courses[1].course_id:
                 return [option1, -2]

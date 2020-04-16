@@ -56,6 +56,7 @@ from app.resource.adm_courses import CourseAdminResource
 from app.resource.adm_lecture import LectureAdminResource
 from app.resource.adm_schedule import ScheduleAdminResource
 from app.resource.adm_payment import PaymentAdminResource, LotAdminResource
+from app.resource.adm_listener import ListenerAdminResource
 
 from app.resource.users import UserResource
 from app.resource.speacker import SpeakerResource

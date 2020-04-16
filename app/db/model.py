@@ -1,7 +1,7 @@
 from app.db import db
 from passlib.apps import custom_app_context as pwd_context
 from passlib import pwd
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import or_
 
 
@@ -13,6 +13,7 @@ class UserModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String, nullable=False)
+    #sobrenome = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     matricula = db.Column(db.String, nullable=False)
     cpf = db.Column(db.String, nullable=False)
@@ -293,3 +294,44 @@ class LotModel(db.Model):
         date = datetime.now()
         self.data_criacao = date
         self.data_modificacao = date
+
+
+class ListenerModel(db.Model):
+    """
+    Modelo para armazenar as presenças dos participantes nos eventos
+    """
+    __tablename__ = 'presenca_evento'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('programacao.id'), nullable=False)
+    data_inicio = db.Column(db.DateTime, nullable=False)
+    data_fim = db.Column(db.DateTime)
+
+    user = db.relationship('UserModel', foreign_keys=[user_id])
+
+    __table_args__ = (
+        db.Index('only_listener_register', user_id, schedule_id, unique=True),
+    )
+
+    def __init__(self, user_id, schedule_id):
+        self.user_id = user_id
+        self.schedule_id = schedule_id
+
+    def start_validation(self, schedule, tolerance=15):
+        now, tolerance = datetime.now(), timedelta(0, tolerance * 60)
+
+        return now
+
+        if now > schedule.data_inicio - tolerance and now < schedule.data_inicio + tolerance:
+            return now
+        return False
+
+    def finish_validation(self, schedule, tolerance=15):
+        now, tolerance = datetime.now(), timedelta(0, tolerance * 60)
+
+        return now
+
+        if now > schedule.data_fim - tolerance and now < schedule.data_fim + tolerance:
+            return now
+        return False

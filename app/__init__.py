@@ -51,7 +51,7 @@ from app.services.custom_routes import *
 from app.resource import (UserResource, LoginResource, UserAdminResource,
 SpeakerResource, ResetPasswordResource, SpeakerAdminResource, ScheduleResource,
 CourseAdminResource, LectureAdminResource, ScheduleAdminResource, CourseScheduleResource,
-LotAdminResource, PaymentAdminResource, ScheduleModalResource)
+LotAdminResource, PaymentAdminResource, ScheduleModalResource, ListenerAdminResource)
 
 adm_api.add_resource(UserAdminResource, '/user', '/user/<int:user_id>')
 adm_api.add_resource(SpeakerAdminResource, '/speaker', '/speaker/<int:speaker_id>')
@@ -60,6 +60,7 @@ adm_api.add_resource(LectureAdminResource, '/lecture', '/lecture/<int:lecture_id
 adm_api.add_resource(ScheduleAdminResource, '/schedule', '/schedule/<int:schedule_id>')
 adm_api.add_resource(LotAdminResource, '/payment/lot', '/payment/lot/<int:lot_id>')
 adm_api.add_resource(PaymentAdminResource, '/payment', '/payment/<int:user_id>')
+adm_api.add_resource(ListenerAdminResource, '/schedule/listener', '/schedule/listener/<int:schedule_id>')
 
 api.add_resource(UserResource, '/user')
 api.add_resource(SpeakerResource, '/speaker', '/speaker/')
