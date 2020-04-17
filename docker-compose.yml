@@ -12,16 +12,29 @@ services:
     environment:                                                            
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=sacsisdb  
+      - POSTGRES_DB=sacsisdb
     networks:
       - postgresnet-sacsis
     volumes:
       - postgres-sacsis-data:/var/lib/postgresql/data
+  
+  pgweb:
+    container_name: pgweb-sacsis
+    restart: always
+    image: sosedoff/pgweb
+    ports: 
+      - "8081:8081"
+    environment:
+      - DATABASE_URL=postgresql://admin:admin@postgresql-sacsis/sacsisdb?sslmode=disable
+    depends_on:
+      - postgresql-sacsis
+    networks:
+      - postgresnet-sacsis
 
   flask-sacsis:
     restart: on-failure
     build: .
-    container_name: flask-sacsis
+    container_name: api-sacsis
     environment:
       - MASTER_ADM_LOGIN=admin@admin.br
       - MASTER_ADM_PASSWORD=admin
@@ -34,7 +47,7 @@ services:
       - postgresql-sacsis
     ports:
       - "5000:5000"
-    networks:                                                               
+    networks:
       - postgresnet-sacsis
 
 volumes:
