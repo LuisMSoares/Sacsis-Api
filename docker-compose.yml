@@ -33,7 +33,7 @@ services:
 
   flask-sacsis:
     restart: on-failure
-    build: .
+    build: ./api
     container_name: api-sacsis
     environment:
       - MASTER_ADM_LOGIN=admin@admin.br
@@ -42,7 +42,7 @@ services:
       - DATABASE_URL=postgresql://admin:admin@postgresql-sacsis/sacsisdb
       - TZ=Brazil/East
     volumes: 
-      - .:/aplication
+      - ./api:/aplication
     depends_on:
       - postgresql-sacsis
     ports:
