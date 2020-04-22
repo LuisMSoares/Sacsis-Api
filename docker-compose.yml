@@ -2,14 +2,15 @@ version: "3"
 
 networks:
   postgresnet-sacsis:
+  flasknet-sacsis:
 
 services:
-  postgresql-sacsis:  
-    restart: on-failure
-    image: postgres:9.6 
-    hostname: postgresql-sacsis
+  postgresql-sacsis:
     container_name: postgresql-sacsis
-    environment:                                                            
+    restart: always
+    image: postgres:9.6
+    hostname: postgresql-sacsis
+    environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=sacsisdb
@@ -17,7 +18,7 @@ services:
       - postgresnet-sacsis
     volumes:
       - postgres-sacsis-data:/var/lib/postgresql/data
-  
+
   pgweb-sacsis:
     container_name: pgweb-sacsis
     restart: always
@@ -32,9 +33,10 @@ services:
       - postgresnet-sacsis
 
   flask-sacsis:
-    restart: on-failure
-    build: ./api
     container_name: api-sacsis
+    restart: always
+    build: ./api
+    hostname: flask-sacsis
     environment:
       - MASTER_ADM_LOGIN=admin@admin.br
       - MASTER_ADM_PASSWORD=admin
@@ -49,6 +51,22 @@ services:
       - "5000:5000"
     networks:
       - postgresnet-sacsis
+      - flasknet-sacsis
+
+  nginx-sacsis:
+    container_name: nginx-sacsis
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./sacsis.tech:/etc/nginx/sites-available/sacsis.tech
+      - ./app.sacsis.tech:/etc/nginx/sites-available/app.sacsis.tech
+    depends_on:
+      - flask-sacsis
+    networks:
+      - flasknet-sacsis
+
 
 volumes:
   postgres-sacsis-data:
