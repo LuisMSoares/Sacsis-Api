@@ -48,10 +48,31 @@ services:
       - .:/aplication
     depends_on:
       - postgresql-sacsis
-    ports:
-      - "5000:5000"
+    #ports:
+    #  - "5000:5000"
     networks:
       - postgresnet-sacsis
+<<<<<<< HEAD
+=======
+      - flasknet-sacsis
+
+  nginx-sacsis:
+    container_name: nginx-sacsis
+    image: nginx:alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./sacsis.tech:/etc/nginx/sites-available/sacsis.tech
+      - ./app.sacsis.tech:/etc/nginx/sites-available/app.sacsis.tech
+    depends_on:
+      - flask-sacsis
+    networks:
+      - flasknet-sacsis
+      - pgwebnet-sacsis
+
+>>>>>>> 2f1761a6635a3e8705d8110a38bbb07a22178367
 
 volumes:
   postgres-sacsis-data:
